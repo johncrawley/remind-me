@@ -1,24 +1,21 @@
 package com.jcrawley.remindme;
 
-import com.jcrawley.remindme.deleteme.DebugTimerTaskRunner;
 import com.jcrawley.remindme.tasks.TimerTaskRunner;
 
 public class CountdownTimer  {
 
     private final MainActivity view;
     private final int SECONDS_PER_MINUTE = 60;
-    private final TimerTaskRunner timerTaskRunner;
-    private boolean isStarted;
     private boolean isTimerRunning = false;
+    private final TimerTaskRunner timerTaskRunner;
     private int timerStartingValue;
     private int currentSeconds;
 
 
     public CountdownTimer(MainActivity view, int initialMinutes){
         this.view = view;
-
+        timerTaskRunner = new TimerTaskRunner();
         view.setCurrentCountdownValue(getClockMinutes(SECONDS_PER_MINUTE), getClockSeconds(SECONDS_PER_MINUTE));
-        timerTaskRunner = new DebugTimerTaskRunner();
         currentSeconds = initialMinutes * SECONDS_PER_MINUTE;
         view.setCurrentCountdownValue(initialMinutes,0);
     }
@@ -62,7 +59,6 @@ public class CountdownTimer  {
     }
 
 
-
     public void startStop(){
         if(isTimerRunning){
             pauseTimer();
@@ -89,7 +85,6 @@ public class CountdownTimer  {
     }
 
 
-
     public void resetTimer(){
         if(isTimerRunning){
             stopTimer();
@@ -112,6 +107,7 @@ public class CountdownTimer  {
         log("Current seconds :" + currentSeconds);
         setCurrentCountdownValue(currentSeconds);
         if(currentSeconds == 0){
+            log("countdownOneSecond() current seconds is 0");
             onCountdownComplete();
             stopTimer();
         }
@@ -133,11 +129,10 @@ public class CountdownTimer  {
     }
 
 
-    public void onCountdownComplete(){
-        log("Entered onCountdownComplete()");
+    private void onCountdownComplete(){
+        view.issueNotification();
         view.showStartButton();
         view.disableStartButton();
-        view.issueNotification();
     }
 
 }

@@ -21,7 +21,7 @@ public class TimesUpNotifier {
     private Notification.Builder notificationBuilder;
     private NotificationManager notificationManager;
     public static final String CHANNEL_ID = "com.jcrawley.ANDROID";
-    public static final String CHANNEL_NAME = "ANDROID CHANNEL";
+    public static final String CHANNEL_NAME = "TIMES UP CHANNEL";
 
 
     public TimesUpNotifier(Context context){
@@ -40,15 +40,12 @@ public class TimesUpNotifier {
 
 
     public void createChannels() {
-
-        // create android channel
         NotificationChannel androidChannel = new NotificationChannel(CHANNEL_ID,
                 CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
         androidChannel.enableLights(true);
         androidChannel.enableVibration(true);
         androidChannel.setLightColor(Color.GREEN);
         androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-
         getManager().createNotificationChannel(androidChannel);
     }
 

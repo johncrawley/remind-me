@@ -32,9 +32,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void issueNotification(){
-        log("Entered issueNotification()");
-        TimesUpNotifier timesUpNotifier = new TimesUpNotifier(MainActivity.this);
-        timesUpNotifier.issueNotification();
+        runOnUiThread(() -> {
+            TimesUpNotifier timesUpNotifier = new TimesUpNotifier(MainActivity.this);
+            timesUpNotifier.issueNotification();
+        });
+
     }
 
 
