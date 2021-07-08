@@ -1,4 +1,4 @@
-package com.jcrawley.remindme.tasks;
+package com.jcrawley.remindme.deleteme;
 
 import com.jcrawley.remindme.CountdownTimer;
 

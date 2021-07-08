@@ -5,4 +5,7 @@
     <string name="button_start_label">Start</string>
     <string name="button_stop_label">Stop</string>
     <string name="button_reset_label">Reset</string>
+    <string name="button_pause_label">Pause</string>
+    <string name="button_resume_label">Resume</string>
+    <string name="default_countdown_time">0:00</string>
 </resources>

@@ -3,7 +3,6 @@ package com.jcrawley.remindme;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,28 +12,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView currentCountdownValue;
     private Button setButton, startStopButton;
-    private CountdownTimer controller;
+    private CountdownTimer countdownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupViews();
+        countdownTimer = new CountdownTimer(this, 5);
+    }
+
+
+    private void setupViews(){
         currentCountdownValue = findViewById(R.id.currentCountdownText);
         startStopButton = findViewById(R.id.startStopButton);
         setButton = findViewById(R.id.setButton);
-        controller = new CountdownTimer(this);
-        setCurrentCountdownValue(15,0);
         setButton.setOnClickListener(this);
         startStopButton.setOnClickListener(this);
     }
 
-
-    public void setCurrentTime(String currentTime) {
-        currentCountdownValue.setText(currentTime);
-    }
-
-
     public void issueNotification(){
+        log("Entered issueNotification()");
         TimesUpNotifier timesUpNotifier = new TimesUpNotifier(MainActivity.this);
         timesUpNotifier.issueNotification();
     }
@@ -49,12 +47,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void enableStartButton() {
+    public void enableAndShowStartButton() {
+        this.startStopButton.setEnabled(true);
         this.startStopButton.setText(getResources().getString(R.string.button_start_label));
-
-    }
-    public void enableStopButton(){
-        this.startStopButton.setText(getResources().getString(R.string.button_stop_label));
     }
 
 
@@ -63,15 +58,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void changeCountdownColorOn() {
-        setCountdownTextColor(R.color.colorTimerTextOn);
-    }
+   // public void changeCountdownColorOn() {
+     //   setCountdownTextColor(R.color.colorTimerTextOn);
+    //}
 
 
     public void enableSetButton() {
         setButton.setEnabled(true);
     }
 
+
+    public void disableStartButton() {
+        startStopButton.setEnabled(false);
+    }
+
+
+    public void showPauseButton(){
+        startStopButton.setText(getString(R.string.button_pause_label));
+    }
+
+
+    public void showResetButton(){
+        setButton.setText(getString(R.string.button_reset_label));
+    }
+
+
+    public void showStartButton(){
+        startStopButton.setText(getString(R.string.button_start_label));
+    }
+
+
+    public void showResumeButton(){
+        startStopButton.setText(getString(R.string.button_resume_label));
+    }
 
     private void setCountdownTextColor(int colorId){
         currentCountdownValue.setTextColor(getResources().getColor(colorId, null));
@@ -87,22 +106,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int id = view.getId();
 
-        log("Click registered! view id  = " + id);
         if(id == R.id.setButton){
-            controller.adjustTime();
-            log("set button clicked");
+            //countdownTimer.adjustTime();
+            countdownTimer.adjustTimeTest(4);
             return;
         }
         if(id == R.id.startStopButton){
-            controller.startStop();
-
-            log("start/stop button clicked");
+            countdownTimer.startStop();
 
         }
-
     }
+
 
     private void log(String msg){
-        Log.i("MainActivity", msg);
+        System.out.println("RemindMe MainActivity: " +  msg);
+        System.out.flush();
     }
+
+
 }
