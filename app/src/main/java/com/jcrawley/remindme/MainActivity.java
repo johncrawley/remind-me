@@ -2,15 +2,18 @@ package com.jcrawley.remindme;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    private TextView currentCountdownValue;
+    private TextView currentCountdownText;
     private Button setButton, startStopButton;
     private CountdownTimer countdownTimer;
 
@@ -24,19 +27,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void setupViews(){
-        currentCountdownValue = findViewById(R.id.currentCountdownText);
+        currentCountdownText = findViewById(R.id.currentCountdownText);
         startStopButton = findViewById(R.id.startStopButton);
         setButton = findViewById(R.id.setButton);
-        setButton.setOnClickListener(this);
-        startStopButton.setOnClickListener(this);
+        setClickListener(setButton, startStopButton, currentCountdownText);
     }
+
+
+    private void setClickListener(View... views){
+        for(View v : views){
+            v.setOnClickListener(this);
+        }
+    }
+
 
     public void issueNotification(){
         runOnUiThread(() -> {
             TimesUpNotifier timesUpNotifier = new TimesUpNotifier(MainActivity.this);
             timesUpNotifier.issueNotification();
         });
+    }
 
+
+    public void showKeyboard(){
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+
+    public void closeKeyboard(){
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
 
@@ -45,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final String currentMinutesText =  currentMinutes > 9 ? "" + currentMinutes : "0" + currentMinutes;
         runOnUiThread(() -> {
             String text = currentMinutesText + " : " + currentSecondsText;
-            currentCountdownValue.setText(text);});
+            currentCountdownText.setText(text);});
     }
 
 
@@ -95,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setCountdownTextColor(int colorId){
-        currentCountdownValue.setTextColor(getResources().getColor(colorId, null));
+        currentCountdownText.setTextColor(getResources().getColor(colorId, null));
     }
 
 
@@ -115,7 +137,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if(id == R.id.startStopButton){
             countdownTimer.startStop();
-
+        }
+        else if(id == R.id.currentCountdownText){
+            startActivity(new Intent(this, ConfigureDialogActivity.class));
         }
     }
 

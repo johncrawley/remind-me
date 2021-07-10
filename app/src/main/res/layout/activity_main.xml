@@ -19,13 +19,50 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+<!--
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/currentCountdownText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/numberPickerTensOfMinutes" />
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/numberPickerTensOfMinutes"
+            app:layout_constraintEnd_toStartOf="@id/numberPickerTensOfSeconds"
+            app:layout_constraintTop_toTopOf="parent"
+
+            android:id="@+id/numberPickerMinutes" />
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/numberPickerMinutes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/numberPickerTensOfSeconds" />
+
+    </LinearLayout>
+
+-->
+
 
     <Button
         android:id="@+id/setButton"
         android:layout_width="150dp"
         android:layout_height="90dp"
         android:text="@string/set_button"
-        android:layout_margin="@dimen/button_padding_bottom"
+        android:layout_margin="@dimen/button_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/startStopButton"
         app:layout_constraintHorizontal_chainStyle="spread"
@@ -36,6 +73,7 @@
         android:id="@+id/startStopButton"
         android:layout_width="150dp"
         android:layout_height="90dp"
+        android:layout_margin="@dimen/button_padding_bottom"
         android:text="@string/button_start_label"
         app:layout_constraintBottom_toBottomOf="@+id/setButton"
         app:layout_constraintEnd_toEndOf="parent"
