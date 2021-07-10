@@ -10,6 +10,7 @@
     <string name="default_countdown_time">0:00</string>
     <string name="time_input_label">Time</string>
     <string name="message_input_label">Message</string>
-    <string name="enter_message_hint">Enter Message Here</string>
+    <string name="enter_message_hint">Notification Message</string>
+    <string name="enter_time_hint">Countdown Time (minutes.seconds)</string>
     <string name="configure_dialog_activity">Configure Timer</string>
 </resources>
