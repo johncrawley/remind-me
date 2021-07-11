@@ -17,11 +17,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ConfigureDialogActivity"
-            android:label="@string/configure_dialog_activity"
-            android:theme="@style/dialogTheme" />
-
     </application>
 
 </manifest>

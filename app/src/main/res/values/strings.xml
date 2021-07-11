@@ -11,6 +11,7 @@
     <string name="time_input_label">Time</string>
     <string name="message_input_label">Message</string>
     <string name="enter_message_hint">Notification Message</string>
-    <string name="enter_time_hint">Countdown Time (minutes.seconds)</string>
+    <string name="enter_minutes_hint">Minutes</string>
+    <string name="enter_seconds_hint">Seconds</string>
     <string name="configure_dialog_activity">Configure Timer</string>
 </resources>

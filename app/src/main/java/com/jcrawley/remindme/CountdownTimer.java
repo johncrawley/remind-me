@@ -19,34 +19,23 @@ public class CountdownTimer  {
         currentSeconds = initialMinutes * SECONDS_PER_MINUTE;
         view.setCurrentCountdownValue(initialMinutes,0);
     }
-    
-    public void adjustTimeTest(int seconds){
+
+
+    public void resetTime(){
         if(isTimerRunning){
             stopTimer();
-            resetTimer();
         }
-        timerStartingValue = seconds;
-        currentSeconds = seconds;
-        view.setCurrentCountdownValue( 0, seconds);
+        currentSeconds = timerStartingValue;
+        int minutes = timerStartingValue / 60;
+        int seconds = timerStartingValue % 60;
+        view.setCurrentCountdownValue( minutes, seconds);
         view.enableAndShowStartButton();
     }
 
 
-    public void adjustTime() {
-
-        final int TIMER_MIN = 5 * SECONDS_PER_MINUTE;
-        final int INTERVAL_INCREMENTS = 5 * SECONDS_PER_MINUTE;
-        final int TIMER_MAX = 60 * SECONDS_PER_MINUTE;
-        timerStartingValue += INTERVAL_INCREMENTS;
-        if(timerStartingValue > TIMER_MAX){
-            timerStartingValue = TIMER_MIN;
-        }
-        view.setCurrentCountdownValue( timerStartingValue / SECONDS_PER_MINUTE, 0);
-    }
-
-
-    private void setTimeOnView(){
-        view.setCurrentCountdownValue( timerStartingValue / SECONDS_PER_MINUTE, 0);
+    public void setTime(int minutes, int seconds){
+        timerStartingValue = (minutes * SECONDS_PER_MINUTE) + seconds;
+        currentSeconds = timerStartingValue;
     }
 
 
@@ -85,15 +74,6 @@ public class CountdownTimer  {
     }
 
 
-    public void resetTimer(){
-        if(isTimerRunning){
-            stopTimer();
-            setTimeOnView();
-        }
-        view.enableAndShowStartButton();
-    }
-
-
     public void setCurrentCountdownValue(int currentValue) {
         int minutes = getClockMinutes(currentValue);
         int seconds = getClockSeconds(currentValue);
@@ -102,12 +82,10 @@ public class CountdownTimer  {
 
 
     public void countdownOneSecond(){
-        log("Entered countdownOneSecond()");
         currentSeconds = currentSeconds <= 0 ? 0 : currentSeconds -1;
         log("Current seconds :" + currentSeconds);
         setCurrentCountdownValue(currentSeconds);
         if(currentSeconds == 0){
-            log("countdownOneSecond() current seconds is 0");
             onCountdownComplete();
             stopTimer();
         }
