@@ -22,13 +22,16 @@ public class ConfigureDialogFragment extends DialogFragment {
     private String minutesStr;
     private String secondsStr;
     private MainViewModel viewModel;
+    private EditText minutesEditText;
+    private EditText secondsEditText;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.configure_dialog, container, false);
         Dialog dialog =  getDialog();
         ViewModelProvider vmp = new ViewModelProvider(this);
-        viewModel = vmp.get(MainViewModel.class);
+        //MainViewModel viewModel
         if(viewModel == null){
             System.out.println("View model is null!");
         }
@@ -40,9 +43,6 @@ public class ConfigureDialogFragment extends DialogFragment {
         return rootView;
     }
 
-
-    private EditText minutesEditText;
-    private EditText secondsEditText;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -73,13 +73,10 @@ public class ConfigureDialogFragment extends DialogFragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 removeNewValueIfOutsideAcceptableRange(editable, 99, minutesStr);
-                minutesStr = editable.toString();
+                minutesStr = validate(editable.toString());
             }
         });
-
-
     }
-
 
 
     private void setupSecondsWatcher(){
@@ -98,24 +95,41 @@ public class ConfigureDialogFragment extends DialogFragment {
             public void afterTextChanged(Editable editable) {
                 removeNewValueIfOutsideAcceptableRange(editable, 59, secondsStr);
                 secondsStr = editable.toString();
-                viewModel.secs = secondsStr;
+                viewModel.secs = validate(secondsStr);
             }
-
         });
     }
 
 
-    public void onDismiss(@NonNull DialogInterface dialog)
-    {
+    private String validate(String str){
+        if(str.isEmpty()){
+            return "0";
+        }
+        return str;
+    }
+
+
+    public void onDismiss(@NonNull DialogInterface dialog){
         Activity activity = getActivity();
-        if(activity instanceof CustomDialogCloseListener)
-            ((CustomDialogCloseListener)activity).handleDialogClose(dialog, Integer.parseInt(minutesStr), Integer.parseInt(secondsStr));
+        if(activity instanceof CustomDialogCloseListener) {
+            int minutes = parse(minutesStr);
+            int seconds = parse(secondsStr);
+            ((CustomDialogCloseListener) activity).handleDialogClose(dialog, minutes, seconds);
+        }
+    }
+
+
+    private int parse(String str){
+        if(null == str || str.isEmpty()){
+            return 0;
+        }
+        return Integer.parseInt(str);
     }
 
 
     private void removeNewValueIfOutsideAcceptableRange(Editable editable, int limit, String previousValue){
         String str = editable.toString();
-        if(str.equals("")){
+        if(str.isEmpty()){
             return;
         }
         int editedNumber = Integer.parseInt(str);
@@ -124,6 +138,5 @@ public class ConfigureDialogFragment extends DialogFragment {
             editable.append(previousValue);
         }
     }
-
 
 }
