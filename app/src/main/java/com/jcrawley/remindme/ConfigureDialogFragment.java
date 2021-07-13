@@ -24,22 +24,22 @@ public class ConfigureDialogFragment extends DialogFragment {
     private MainViewModel viewModel;
     private EditText minutesEditText;
     private EditText secondsEditText;
+    private EditText messageEditText;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.configure_dialog, container, false);
         Dialog dialog =  getDialog();
-        ViewModelProvider vmp = new ViewModelProvider(this);
-        //MainViewModel viewModel
-        if(viewModel == null){
-            System.out.println("View model is null!");
+        if(getActivity() == null){
+            return rootView;
         }
+        ViewModelProvider vmp = new ViewModelProvider(getActivity());
+        viewModel = vmp.get(MainViewModel.class);
+
         if(dialog != null){
-            dialog.setTitle("Simple Dialog");
+            dialog.setTitle("Configure");
         }
-
-
         return rootView;
     }
 
@@ -49,13 +49,21 @@ public class ConfigureDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         minutesStr = "";
-        minutesEditText = view.findViewById(R.id.minutesInputEditText);
-        secondsEditText = view.findViewById(R.id.secondsInputEditText);
-
+        minutesEditText = getEditTextAndAssignString(view, R.id.minutesInputEditText, viewModel.mins);
+        secondsEditText = getEditTextAndAssignString(view, R.id.secondsInputEditText, viewModel.secs);
+        messageEditText = getEditTextAndAssignString(view, R.id.messageInputEditText, viewModel.msg);
         setupMinutesWatcher();
         setupSecondsWatcher();
     }
 
+
+    private EditText getEditTextAndAssignString(View parentView, int id, String str){
+        EditText editText = parentView.findViewById(id);
+        if(str != null) {
+            editText.setText(str);
+        }
+        return editText;
+    }
 
 
     private void setupMinutesWatcher(){
@@ -112,8 +120,12 @@ public class ConfigureDialogFragment extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog){
         Activity activity = getActivity();
         if(activity instanceof CustomDialogCloseListener) {
-            int minutes = parse(minutesStr);
-            int seconds = parse(secondsStr);
+            viewModel.mins = minutesEditText.getText().toString();
+            viewModel.secs = secondsEditText.getText().toString();
+            int minutes = parse(viewModel.mins);
+            int seconds = parse(viewModel.secs);
+
+            viewModel.msg = messageEditText.getText().toString();
             ((CustomDialogCloseListener) activity).handleDialogClose(dialog, minutes, seconds);
         }
     }
