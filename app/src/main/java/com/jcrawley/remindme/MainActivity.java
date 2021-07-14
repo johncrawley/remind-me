@@ -1,16 +1,13 @@
 package com.jcrawley.remindme;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -20,9 +17,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView currentCountdownText;
     private Button setButton, startStopButton;
     private CountdownTimer countdownTimer;
-
-
     private MainViewModel viewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,25 +29,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         countdownTimer = new CountdownTimer(this, 5);
     }
 
+
     private void setupViewModel(){
-
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        // Create the observer which updates the UI.
-        final Observer<String> nameObserver = new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable final String newName) {
-                // Update the UI, in this case, a TextView.
-                currentCountdownText.setText(newName);
-            }
-        };
-
-        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-        viewModel.getMessage().observe(this, nameObserver);
-    }
-
-
-    public MainViewModel getViewModel(){
-        return viewModel;
     }
 
 
@@ -62,13 +42,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setClickListener(setButton, startStopButton, currentCountdownText);
     }
 
+
     public void onResume(){
+        FragmentTransaction ft =  getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        ft.commit();
         super.onResume();
     }
 
+
     private void printMessageToLog(){
         System.out.println("message: " + viewModel.getMessage().getValue());
-
     }
 
 
@@ -78,12 +66,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+
     private void startDialogFragment(){
-        FragmentManager fm = getSupportFragmentManager();
-        ConfigureDialogFragment dialogFragment = new ConfigureDialogFragment();
-        dialogFragment.show(fm, "tag");
-       // dialogFragment.
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        ConfigureDialogFragment configureDialogFragment = ConfigureDialogFragment.newInstance();
+        configureDialogFragment.show(ft, "dialog");
     }
+
+
 
 
     public void issueNotification(){
@@ -93,32 +91,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-
-    public void showKeyboard(){
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
-
-
-    public void closeKeyboard(){
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-    }
-
-    public void setCurrentCountdownText(String countdownText){
-        int seconds, minutes;
-        if(!countdownText.contains(".")){
-            int countdownNumber = Integer.parseInt(countdownText);
-            seconds = countdownNumber % 60;
-            minutes = countdownNumber / 60;
-        }
-        else{
-
-
-        }
-
-    }
 
     public void setCurrentCountdownValue(int currentMinutes, int currentSeconds) {
         final String currentSecondsText =  currentSeconds > 9 ? "" + currentSeconds : "0" + currentSeconds;
@@ -176,11 +148,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setCountdownTextColor(int colorId){
         currentCountdownText.setTextColor(getResources().getColor(colorId, null));
-    }
-
-
-    public void disableSetButton() {
-        setButton.setEnabled(false);
     }
 
 

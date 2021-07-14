@@ -27,6 +27,17 @@ public class ConfigureDialogFragment extends DialogFragment {
     private EditText messageEditText;
 
 
+    static ConfigureDialogFragment newInstance() {
+        ConfigureDialogFragment fragment = new ConfigureDialogFragment();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        //args.putInt("num", num);
+        //fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.configure_dialog, container, false);
