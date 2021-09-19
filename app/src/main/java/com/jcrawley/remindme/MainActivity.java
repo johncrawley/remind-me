@@ -171,11 +171,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void log(String msg){
-        System.out.println("RemindMe MainActivity: " +  msg);
-        System.out.flush();
-    }
-
 
     @Override
     public void handleDialogClose(DialogInterface dialogInterface, int minutes, int seconds) {
