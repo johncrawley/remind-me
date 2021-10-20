@@ -67,9 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     private void startDialogFragment(){
-
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
@@ -80,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ConfigureDialogFragment configureDialogFragment = ConfigureDialogFragment.newInstance();
         configureDialogFragment.show(ft, "dialog");
     }
-
-
 
 
     public void issueNotification(){
@@ -146,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startStopButton.setText(getString(R.string.button_resume_label));
     }
 
+
     private void setCountdownTextColor(int colorId){
         currentCountdownText.setTextColor(getResources().getColor(colorId, null));
     }
@@ -156,20 +153,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = view.getId();
 
         if(id == R.id.setButton){
-            //countdownTimer.adjustTime();
             countdownTimer.resetTime();
-            return;
         }
-        if(id == R.id.startStopButton){
+        else if(id == R.id.startStopButton){
             countdownTimer.startStop();
             printMessageToLog();
         }
         else if(id == R.id.currentCountdownText){
-           // startActivity(new Intent(this, ConfigureDialogActivity.class));
             startDialogFragment();
         }
     }
-
 
 
     @Override

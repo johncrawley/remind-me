@@ -28,14 +28,7 @@ public class ConfigureDialogFragment extends DialogFragment {
 
 
     static ConfigureDialogFragment newInstance() {
-        ConfigureDialogFragment fragment = new ConfigureDialogFragment();
-
-        // Supply num input as an argument.
-        Bundle args = new Bundle();
-        //args.putInt("num", num);
-        //fragment.setArguments(args);
-
-        return fragment;
+        return new ConfigureDialogFragment();
     }
 
     @Override
