@@ -18,24 +18,34 @@ import android.graphics.Color;
 public class TimesUpNotifier {
 
     private final Context context;
+    private final MainViewModel viewModel;
     private Notification.Builder notificationBuilder;
     private NotificationManager notificationManager;
     public static final String CHANNEL_ID = "com.jcrawley.ANDROID";
     public static final String CHANNEL_NAME = "TIMES UP CHANNEL";
 
 
-    public TimesUpNotifier(Context context){
+    public TimesUpNotifier(Context context, MainViewModel viewModel){
         this.context = context;
+        this.viewModel = viewModel;
         createChannels();
         createNotification();
     }
 
 
     public void createNotification(){
-        notificationBuilder = getAndroidChannelNotification("Immersion", "Immersion Reminder!");
+        String title = getStr(R.string.notification_title);
+        String enteredMessage = viewModel.reminderMessage.trim();
+        String message = enteredMessage.isEmpty() ? getStr(R.string.notification_default_message) : enteredMessage;
+        notificationBuilder = getAndroidChannelNotification(title, message);
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
         notificationBuilder.setContentIntent(contentIntent);
+    }
+
+
+    private String getStr(int resId){
+        return context.getResources().getString(resId);
     }
 
 

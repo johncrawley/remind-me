@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void issueNotification(){
         runOnUiThread(() -> {
-            TimesUpNotifier timesUpNotifier = new TimesUpNotifier(MainActivity.this);
+            TimesUpNotifier timesUpNotifier = new TimesUpNotifier(MainActivity.this, viewModel);
             timesUpNotifier.issueNotification();
         });
     }

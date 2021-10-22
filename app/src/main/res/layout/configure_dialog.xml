@@ -38,7 +38,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:id="@+id/secondsInputEditText"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:inputType="number"
             android:layout_height="wrap_content" />
 
@@ -54,6 +54,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:id="@+id/messageInputEditText"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 

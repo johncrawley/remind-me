@@ -12,7 +12,7 @@ public class MainViewModel extends ViewModel {
 
     public String mins;
     public String secs;
-    public String msg;
+    public String reminderMessage;
 
     public MutableLiveData<String> getMessage(){
         if(message == null){

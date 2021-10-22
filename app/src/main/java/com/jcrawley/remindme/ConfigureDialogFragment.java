@@ -55,7 +55,7 @@ public class ConfigureDialogFragment extends DialogFragment {
         minutesStr = "";
         minutesEditText = getEditTextAndAssignString(view, R.id.minutesInputEditText, viewModel.mins);
         secondsEditText = getEditTextAndAssignString(view, R.id.secondsInputEditText, viewModel.secs);
-        messageEditText = getEditTextAndAssignString(view, R.id.messageInputEditText, viewModel.msg);
+        messageEditText = getEditTextAndAssignString(view, R.id.messageInputEditText, viewModel.reminderMessage);
         setupMinutesWatcher();
         setupSecondsWatcher();
     }
@@ -129,7 +129,7 @@ public class ConfigureDialogFragment extends DialogFragment {
             int minutes = parse(viewModel.mins);
             int seconds = parse(viewModel.secs);
 
-            viewModel.msg = messageEditText.getText().toString();
+            viewModel.reminderMessage = messageEditText.getText().toString();
             ((CustomDialogCloseListener) activity).handleDialogClose(dialog, minutes, seconds);
         }
     }
