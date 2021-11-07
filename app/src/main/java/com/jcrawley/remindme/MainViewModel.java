@@ -10,9 +10,9 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<String> minutes;
     private MutableLiveData<String> seconds;
 
-    public String mins;
-    public String secs;
-    public String reminderMessage;
+    public String mins = "5";
+    public String secs = "0";
+    public String reminderMessage = "Time's Up!";
 
     public MutableLiveData<String> getMessage(){
         if(message == null){

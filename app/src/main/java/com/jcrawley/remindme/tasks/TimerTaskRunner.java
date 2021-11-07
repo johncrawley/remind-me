@@ -1,7 +1,6 @@
 package com.jcrawley.remindme.tasks;
 
 import com.jcrawley.remindme.CountdownTimer;
-import com.jcrawley.remindme.tasks.CountdownTimerTask;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -19,21 +18,14 @@ public class TimerTaskRunner {
 
 
     public void startTimer(CountdownTimer countdownTimer){
-        log("Entered startTimer()");
-        future = scheduledExecutorService.scheduleWithFixedDelay(new CountdownTimerTask(countdownTimer), 0, 1, TimeUnit.SECONDS);
+        future = scheduledExecutorService.scheduleWithFixedDelay(countdownTimer::countdownOneSecond, 0, 1, TimeUnit.SECONDS);
     }
 
 
     public void stopTimer(){
-        log("Entered stopTimer()");
         if(!future.isCancelled()){
             future.cancel(true);
         }
-    }
-
-    void log(String msg){
-        System.out.println("RemindMe TimerThreadRunner: " + msg);
-        System.out.flush();
     }
 
 }

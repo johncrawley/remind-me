@@ -83,7 +83,6 @@ public class CountdownTimer  {
 
     public void countdownOneSecond(){
         currentSeconds = currentSeconds <= 0 ? 0 : currentSeconds -1;
-        log("Current seconds :" + currentSeconds);
         setCurrentCountdownValue(currentSeconds);
         if(currentSeconds == 0){
             onCountdownComplete();
@@ -91,11 +90,6 @@ public class CountdownTimer  {
         }
     }
 
-
-    private void log(String msg){
-        System.out.println("RemindMe CountdownTimer: " + msg);
-        System.out.flush();
-    }
 
 
     private int getClockSeconds(int seconds){
