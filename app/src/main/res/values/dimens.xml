@@ -3,5 +3,7 @@
     <dimen name="button_padding_bottom">24dp</dimen>
     <dimen name="button_margin">18dp</dimen>
     <dimen name="label_margin">12dp</dimen>
+    <dimen name="timer_text_size">86sp</dimen>
+    <dimen name="times_up_text_size">36sp</dimen>
 
 </resources>

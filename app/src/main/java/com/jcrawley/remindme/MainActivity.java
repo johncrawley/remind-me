@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button setButton, startStopButton;
     private CountdownTimer countdownTimer;
     private MainViewModel viewModel;
+    private boolean isInFront;
 
 
     @Override
@@ -27,6 +28,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupViews();
         setupViewModel();
         countdownTimer = new CountdownTimer(this, 5);
+    }
+
+
+    @Override
+    public void onResume(){
+        isInFront = true;
+        FragmentTransaction ft =  getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        ft.commit();
+        super.onResume();
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isInFront = false;
     }
 
 
@@ -40,18 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startStopButton = findViewById(R.id.startStopButton);
         setButton = findViewById(R.id.setButton);
         setClickListener(setButton, startStopButton, currentCountdownText);
-    }
-
-
-    public void onResume(){
-        FragmentTransaction ft =  getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-        ft.commit();
-        super.onResume();
     }
 
 
@@ -81,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void issueNotification(){
+        if(isInFront){
+            return;
+        }
         runOnUiThread(() -> {
             TimesUpNotifier timesUpNotifier = new TimesUpNotifier(MainActivity.this, viewModel);
             timesUpNotifier.issueNotification();

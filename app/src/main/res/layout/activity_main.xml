@@ -12,49 +12,28 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="@string/default_countdown_time"
-        android:textSize="86sp"
+        android:textSize="@dimen/timer_text_size"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/colorTimerTextOff"
-        app:layout_constraintBottom_toTopOf="@+id/setButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-<!--
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/timesUpMessageText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/currentCountdownText"
+        android:layout_margin="8dp"
+        android:visibility="gone"
+        android:textAlignment="center"
+        android:text="@string/notification_default_message"
+        android:textSize="@dimen/times_up_text_size"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorTimerTextOff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <NumberPicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/numberPickerTensOfMinutes" />
-
-        <NumberPicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/numberPickerTensOfMinutes"
-            app:layout_constraintEnd_toStartOf="@id/numberPickerTensOfSeconds"
-            app:layout_constraintTop_toTopOf="parent"
-
-            android:id="@+id/numberPickerMinutes" />
-
-        <NumberPicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/numberPickerMinutes"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/numberPickerTensOfSeconds" />
-
-    </LinearLayout>
-
--->
+        app:layout_constraintBottom_toTopOf="@+id/setButton"
+        app:layout_constraintTop_toBottomOf="@+id/currentCountdownText" />
 
 
     <Button
