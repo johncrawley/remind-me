@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private TextView currentCountdownText;
+    private TextView timesUpMessageText;
     private Button setButton, startStopButton;
     private CountdownTimer countdownTimer;
     private MainViewModel viewModel;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setupViews(){
         currentCountdownText = findViewById(R.id.currentCountdownText);
+        timesUpMessageText = findViewById(R.id.timesUpMessageText);
         startStopButton = findViewById(R.id.startStopButton);
         setButton = findViewById(R.id.setButton);
         setClickListener(setButton, startStopButton, currentCountdownText);
@@ -91,13 +94,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void issueNotification(){
+        showTimesUpText();
+        playSound();
         if(isInFront){
             return;
         }
         runOnUiThread(() -> {
             TimesUpNotifier timesUpNotifier = new TimesUpNotifier(MainActivity.this, viewModel);
             timesUpNotifier.issueNotification();
+
         });
+    }
+
+
+    private void showTimesUpText(){
+        timesUpMessageText.setVisibility(View.VISIBLE);
+    }
+
+
+    private void playSound(){
+        MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.alert1);
+        try{
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+
+        }catch(Exception e){e.printStackTrace();}
     }
 
 
