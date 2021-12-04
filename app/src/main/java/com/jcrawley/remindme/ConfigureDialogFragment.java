@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ public class ConfigureDialogFragment extends DialogFragment {
     private EditText minutesEditText;
     private EditText secondsEditText;
     private EditText messageEditText;
+    private Button button;
 
 
     static ConfigureDialogFragment newInstance() {
@@ -58,6 +60,13 @@ public class ConfigureDialogFragment extends DialogFragment {
         messageEditText = getEditTextAndAssignString(view, R.id.messageInputEditText, viewModel.reminderMessage);
         setupMinutesWatcher();
         setupSecondsWatcher();
+        setupOkButton(view);
+    }
+
+
+    private void setupOkButton(View parentView){
+        button = parentView.findViewById(R.id.configOkButton);
+        button.setOnClickListener((View v) -> dismiss());
     }
 
 

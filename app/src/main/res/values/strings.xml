@@ -13,6 +13,7 @@
     <string name="enter_message_hint">Notification Message</string>
     <string name="enter_minutes_hint">Minutes</string>
     <string name="enter_seconds_hint">Seconds</string>
+    <string name="config_ok_button">OK</string>
     <string name="configure_dialog_activity">Configure Timer</string>
     <string name="notification_title">Reminder</string>
     <string name="notification_default_message">Time\'s up!</string>
