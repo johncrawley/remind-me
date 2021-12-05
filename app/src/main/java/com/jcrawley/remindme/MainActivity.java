@@ -8,7 +8,12 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CountdownTimer countdownTimer;
     private MainViewModel viewModel;
     private boolean isInFront;
+    private Animation displayTimesUpTextAnimation;
 
 
     @Override
@@ -29,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         setupViews();
         setupViewModel();
+        initAnimation();
         countdownTimer = new CountdownTimer(this, 5);
     }
 
@@ -107,8 +114,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    private void initAnimation(){
+        displayTimesUpTextAnimation = new ScaleAnimation(0.1f,1.0f, 0.1f, 1.0f, 0.5f, 0.5f);
+        displayTimesUpTextAnimation.setDuration(500);
+        displayTimesUpTextAnimation.setFillAfter(true);
+    }
+
+
     private void showTimesUpText(){
-        timesUpMessageText.setVisibility(View.VISIBLE);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
+            timesUpMessageText.setVisibility(View.VISIBLE);
+            timesUpMessageText.startAnimation(displayTimesUpTextAnimation);
+        });
+    }
+
+
+    private void hideTimesUpText(){
+        timesUpMessageText.clearAnimation();
+        timesUpMessageText.setVisibility(View.INVISIBLE);
     }
 
 
@@ -188,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(id == R.id.setButton){
             countdownTimer.resetTime();
+            hideTimesUpText();
         }
         else if(id == R.id.startStopButton){
             countdownTimer.startStop();
