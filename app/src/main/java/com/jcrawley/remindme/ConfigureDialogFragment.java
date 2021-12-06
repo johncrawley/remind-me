@@ -137,8 +137,9 @@ public class ConfigureDialogFragment extends DialogFragment {
             viewModel.secs = secondsEditText.getText().toString();
             int minutes = parse(viewModel.mins);
             int seconds = parse(viewModel.secs);
-
             viewModel.reminderMessage = messageEditText.getText().toString();
+            Preferences preferences = new Preferences(activity);
+            preferences.saveSettings(seconds, minutes, viewModel.reminderMessage);
             ((CustomDialogCloseListener) activity).handleDialogClose(dialog, minutes, seconds);
         }
     }

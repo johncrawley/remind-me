@@ -14,6 +14,8 @@ public class MainViewModel extends ViewModel {
     public String secs = "0";
     public String reminderMessage = "Time's Up!";
 
+    public boolean hasBeenInitialized = false;
+
     public MutableLiveData<String> getMessage(){
         if(message == null){
             message = new MutableLiveData<>();

@@ -15,9 +15,9 @@ public class CountdownTimer  {
     public CountdownTimer(MainActivity view, int initialMinutes){
         this.view = view;
         timerTaskRunner = new TimerTaskRunner();
-        view.setCurrentCountdownValue(getClockMinutes(SECONDS_PER_MINUTE), getClockSeconds(SECONDS_PER_MINUTE));
+        //view.setCurrentCountdownValue(getClockMinutes(SECONDS_PER_MINUTE), getClockSeconds(SECONDS_PER_MINUTE));
         currentSeconds = initialMinutes * SECONDS_PER_MINUTE;
-        view.setCurrentCountdownValue(initialMinutes,0);
+        //view.setCurrentCountdownValue(initialMinutes,0);
     }
 
 

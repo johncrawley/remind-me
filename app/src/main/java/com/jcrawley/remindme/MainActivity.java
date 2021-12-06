@@ -13,7 +13,6 @@ import android.os.Looper;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupViewModel();
         initAnimation();
         countdownTimer = new CountdownTimer(this, 5);
+        countdownTimer.setTime(Integer.parseInt(viewModel.mins), Integer.parseInt(viewModel.secs));
     }
 
 
@@ -62,7 +62,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void setupViewModel(){
+        log("Entered setupViewModel");
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        if(viewModel.hasBeenInitialized){
+            log("view model has been initialized, returning");
+            return;
+        }
+        viewModel.hasBeenInitialized = true;
+        Preferences preferences = new Preferences(MainActivity.this);
+        Settings settings = preferences.getSettings();
+        viewModel.secs = "" + settings.getSeconds();
+        viewModel.mins = "" + settings.getMinutes();
+        viewModel.reminderMessage = settings.getTimesUpMessage();
+        log("about to invoke setCurrentCountdownValue");
+        setCurrentCountdownValue(Integer.parseInt(viewModel.mins), Integer.parseInt(viewModel.secs));
     }
 
 
@@ -147,11 +160,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void setCurrentCountdownValue(int currentMinutes, int currentSeconds) {
+        log("Entered setCurrentCountdownValue()  currentMins: " + currentMinutes + " currentSecs: " + currentSeconds);
         final String currentSecondsText =  currentSeconds > 9 ? "" + currentSeconds : "0" + currentSeconds;
         final String currentMinutesText =  currentMinutes > 9 ? "" + currentMinutes : "0" + currentMinutes;
         runOnUiThread(() -> {
             String text = currentMinutesText + " : " + currentSecondsText;
             currentCountdownText.setText(text);});
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ MainActivity: " +  msg);
     }
 
 
