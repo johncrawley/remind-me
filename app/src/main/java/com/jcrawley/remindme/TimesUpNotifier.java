@@ -76,11 +76,17 @@ public class TimesUpNotifier {
         return notificationManager;
     }
 
+    private final int NOTIFICATION_ID = 101;
+
 
     public void issueNotification(){
         notificationBuilder.setWhen(System.currentTimeMillis());
-        int notificationId = 101;
-        notificationManager.notify(notificationId, notificationBuilder.build());
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+
+    public void dismissNotification(){
+        notificationManager.cancel(NOTIFICATION_ID);
     }
 
 }

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MainViewModel viewModel;
     private boolean isInFront;
     private Animation displayTimesUpTextAnimation;
+    private TimesUpNotifier timesUpNotifier;
 
 
     @Override
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         ft.addToBackStack(null);
         ft.commit();
+        cancelNotification();
         super.onResume();
     }
 
@@ -85,11 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void printMessageToLog(){
-        System.out.println("message: " + viewModel.getMessage().getValue());
-    }
-
-
     private void setClickListener(View... views){
         for(View v : views){
             v.setOnClickListener(this);
@@ -117,10 +114,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         runOnUiThread(() -> {
-            TimesUpNotifier timesUpNotifier = new TimesUpNotifier(MainActivity.this, viewModel);
+            timesUpNotifier = new TimesUpNotifier(MainActivity.this, viewModel);
             timesUpNotifier.issueNotification();
 
         });
+    }
+
+
+    private void cancelNotification(){
+        if(timesUpNotifier == null){
+            return;
+        }
+        timesUpNotifier.dismissNotification();
     }
 
 
@@ -221,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else if(id == R.id.startStopButton){
             countdownTimer.startStop();
-            printMessageToLog();
         }
         else if(id == R.id.currentCountdownText){
             startDialogFragment();
