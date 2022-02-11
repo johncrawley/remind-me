@@ -10,11 +10,13 @@ public class CountdownTimer  {
     private final TimerTaskRunner timerTaskRunner;
     private int timerStartingValue;
     private int currentSeconds;
+    private final MainViewModel viewModel;
 
 
     public CountdownTimer(MainActivity view, int initialMinutes){
         this.view = view;
         timerTaskRunner = new TimerTaskRunner();
+        viewModel = view.getViewModel();
         //view.setCurrentCountdownValue(getClockMinutes(SECONDS_PER_MINUTE), getClockSeconds(SECONDS_PER_MINUTE));
         currentSeconds = initialMinutes * SECONDS_PER_MINUTE;
         //view.setCurrentCountdownValue(initialMinutes,0);
@@ -22,14 +24,21 @@ public class CountdownTimer  {
 
 
     public void resetTime(){
-        if(isTimerRunning){
+        if(isTimerRunning && viewModel.doesTimerStopOnReset){
             stopTimer();
         }
         currentSeconds = timerStartingValue;
         int minutes = timerStartingValue / 60;
         int seconds = timerStartingValue % 60;
         view.setCurrentCountdownValue( minutes, seconds);
-        view.enableAndShowStartButton();
+        resetStartButton();
+    }
+
+
+    public void resetStartButton(){
+        if(!isTimerRunning || viewModel.doesTimerStopOnReset){
+            view.enableAndShowStartButton();
+        }
     }
 
 

@@ -121,6 +121,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    public MainViewModel getViewModel(){
+        return viewModel;
+    }
+
+
     private void cancelNotification(){
         if(timesUpNotifier == null){
             return;
@@ -162,11 +167,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void setCurrentCountdownValue(int currentMinutes, int currentSeconds) {
-        final String currentSecondsText =  currentSeconds > 9 ? "" + currentSeconds : "0" + currentSeconds;
-        final String currentMinutesText =  currentMinutes > 9 ? "" + currentMinutes : "0" + currentMinutes;
         runOnUiThread(() -> {
-            String text = currentMinutesText + " : " + currentSecondsText;
-            currentCountdownText.setText(text);});
+            String text = getTimeText(currentMinutes) + " : " + getTimeText(currentSeconds);
+            currentCountdownText.setText(text);
+        });
     }
 
 
@@ -240,4 +244,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             countdownTimer.setTime(minutes, seconds);
         }
     }
+
+
+    private String getTimeText(int timeValue){
+        return timeValue > 9 ?
+                "" + timeValue
+                : "0" + timeValue;
+    }
+
+
 }
