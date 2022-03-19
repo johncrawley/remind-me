@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void playSound(){
         MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.alert1);
         try{
-            mediaPlayer.prepare();
             mediaPlayer.start();
 
         }catch(Exception e){e.printStackTrace();}
@@ -175,8 +174,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void enableAndShowStartButton() {
+        log("Entered enableAndShowStartButton()");
         this.startStopButton.setEnabled(true);
+        log("StartStopButton is enabled!");
         this.startStopButton.setText(getResources().getString(R.string.button_start_label));
+    }
+
+    private void log(String msg){
+        System.out.println("^^^Main Activity : " + msg);
     }
 
 
@@ -191,7 +196,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void disableStartButton() {
-        startStopButton.setEnabled(false);
+        log("Entered disableStartButton()");
+        runOnUiThread(() ->startStopButton.setEnabled(false) );
+
     }
 
 

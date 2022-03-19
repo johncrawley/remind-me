@@ -36,9 +36,16 @@ public class CountdownTimer  {
 
 
     public void resetStartButton(){
-        if(!isTimerRunning || viewModel.doesTimerStopOnReset){
+        if(!isTimerRunning){
             view.enableAndShowStartButton();
         }
+        else{
+            log("ResetSTartButton: Timer is running");
+        }
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ CountdownTimer: " + msg);
     }
 
 
@@ -76,9 +83,11 @@ public class CountdownTimer  {
 
 
     private void stopTimer(){
+        log("Entered stopTimer()");
         isTimerRunning = false;
         view.enableSetButton();
         view.changeCountdownColorOff();
+        view.enableAndShowStartButton();
         timerTaskRunner.stopTimer();
     }
 
@@ -94,11 +103,12 @@ public class CountdownTimer  {
         currentSeconds = currentSeconds <= 0 ? 0 : currentSeconds -1;
         setCurrentCountdownValue(currentSeconds);
         if(currentSeconds == 0){
+            log("Countdown 1 second: current seconds: 0 , about to run onCountdownComplete()");
             onCountdownComplete();
+            log("About to stop timer");
             stopTimer();
         }
     }
-
 
 
     private int getClockSeconds(int seconds){
@@ -111,9 +121,13 @@ public class CountdownTimer  {
 
 
     private void onCountdownComplete(){
+        log("about to issue notification");
         view.issueNotification();
+        log("About to showStartButton");
         view.showStartButton();
+        log("About to disable Start Button");
         view.disableStartButton();
+        log("About to exit onCountdownComplete");
     }
 
 }
