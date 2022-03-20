@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-
         ConfigureDialogFragment configureDialogFragment = ConfigureDialogFragment.newInstance();
         configureDialogFragment.show(ft, "dialog");
     }
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void initAnimation(){
-        displayTimesUpTextAnimation = new ScaleAnimation(0.1f,1.0f, 0.1f, 1.0f, 0.5f, 0.5f);
+        displayTimesUpTextAnimation = new ScaleAnimation(1.0f,1.0f, 0.1f, 1.0f, 0.5f, 1f);
         displayTimesUpTextAnimation.setDuration(500);
         displayTimesUpTextAnimation.setFillAfter(true);
     }
@@ -174,14 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void enableAndShowStartButton() {
-        log("Entered enableAndShowStartButton()");
         this.startStopButton.setEnabled(true);
-        log("StartStopButton is enabled!");
         this.startStopButton.setText(getResources().getString(R.string.button_start_label));
-    }
-
-    private void log(String msg){
-        System.out.println("^^^Main Activity : " + msg);
     }
 
 
@@ -196,9 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void disableStartButton() {
-        log("Entered disableStartButton()");
         runOnUiThread(() ->startStopButton.setEnabled(false) );
-
     }
 
 

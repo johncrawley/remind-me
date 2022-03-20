@@ -26,7 +26,6 @@ public class ConfigureDialogFragment extends DialogFragment {
     private EditText minutesEditText;
     private EditText secondsEditText;
     private EditText messageEditText;
-    private Button button;
 
 
     static ConfigureDialogFragment newInstance() {
@@ -65,7 +64,7 @@ public class ConfigureDialogFragment extends DialogFragment {
 
 
     private void setupOkButton(View parentView){
-        button = parentView.findViewById(R.id.configOkButton);
+        Button button = parentView.findViewById(R.id.configOkButton);
         button.setOnClickListener((View v) -> dismiss());
     }
 

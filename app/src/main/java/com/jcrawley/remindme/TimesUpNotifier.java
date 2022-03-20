@@ -39,7 +39,7 @@ public class TimesUpNotifier {
         String message = enteredMessage.isEmpty() ? getStr(R.string.notification_default_message) : enteredMessage;
         notificationBuilder = getAndroidChannelNotification(title, message);
         Intent notificationIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         notificationBuilder.setContentIntent(contentIntent);
     }
 
