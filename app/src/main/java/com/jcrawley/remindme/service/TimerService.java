@@ -15,7 +15,7 @@ public class TimerService extends Service {
     private final Context context;
     public static final String QUERIES = "queries";
     private final IBinder mBinder = new MyBinder();
-    private static final String ACTION_STRING_SERVICE = "ToService";
+    private static final String ACTION_STRING_SERVICE = "TimerService";
     private static final String ACTION_STRING_ACTIVITY = "ToActivity";
 
     public TimerService() {
@@ -52,6 +52,7 @@ public class TimerService extends Service {
 
         private void log(String msg){
             System.out.println("^^^ TimerService: " + msg);
+            System.out.flush();
         }
 
 
@@ -63,6 +64,7 @@ public class TimerService extends Service {
 
         //send broadcast from activity to all receivers listening to the action "ACTION_STRING_ACTIVITY"
         private void sendBroadcast() {
+            log("Entered sendBroadcast()");
             Intent new_intent = new Intent();
             new_intent.setAction(ACTION_STRING_ACTIVITY);
             sendBroadcast(new_intent);
@@ -84,7 +86,7 @@ public class TimerService extends Service {
             //   Log.i("FirstService", " msg: " + query.getSuccessMessage());
             //}
 
-            Log.i("FirstService", " hello! onStartCommand() initiated!");
+            log(" hello! onStartCommand() initiated!");
             //new Notifier(context, "Hello there", "Title!!");
             return Service.START_REDELIVER_INTENT;
         }

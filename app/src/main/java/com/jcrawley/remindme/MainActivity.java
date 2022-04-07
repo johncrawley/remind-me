@@ -5,16 +5,24 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.jcrawley.remindme.service.TimerService;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, CustomDialogCloseListener {
 
@@ -27,6 +35,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isInFront;
     private Animation displayTimesUpTextAnimation;
     private TimesUpNotifier timesUpNotifier;
+    private static final String ACTION_STRING_SERVICE = "TimerService";
+    private static final String ACTION_STRING_ACTIVITY = "ToActivity";
+
+    //STEP1: Create a broadcast receiver
+    private final BroadcastReceiver activityReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            log("Broadcast receiver, message received!");
+            Toast.makeText(getApplicationContext(), "received message in activity..!", Toast.LENGTH_SHORT).show();
+        }
+    };
 
 
     @Override
@@ -38,6 +58,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initAnimation();
         countdownTimer = new CountdownTimer(this, 5);
         countdownTimer.setTime(Integer.parseInt(viewModel.mins), Integer.parseInt(viewModel.secs));
+        registerBroadcastReceiver();
+        startService();
+    }
+
+
+    private void registerBroadcastReceiver(){
+        log("Entered registerBroadcastReceiver()");
+        if (activityReceiver != null) {
+            log("activityReceiver is not null, creating the intent filter and registering the receiver!");
+            //Create an intent filter to listen to the broadcast sent with the action "ACTION_STRING_ACTIVITY"
+            IntentFilter intentFilter = new IntentFilter(ACTION_STRING_ACTIVITY);
+            //Map the intent filter to the receiver
+            registerReceiver(activityReceiver, intentFilter);
+        }
+        else{
+            log("activity receiver is null, won't be doing any registering!");
+        }
+    }
+
+
+    private void startService(){
+        log("Entered startService()");
+        //Start the service on launching the application
+        startService(new Intent(this, TimerService.class));
+        log("Service should have started around about now");
+        findViewById(R.id.testButton).setOnClickListener(v -> {
+            log("Sending broadcast to service");
+            sendBroadcast();
+        });
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ MainActivity: " + msg);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+      log( "onDestroy");
+        //STEP3: Unregister the receiver
+        unregisterReceiver(activityReceiver);
+    }
+
+    //send broadcast from activity to all receivers listening to the action "ACTION_STRING_SERVICE"
+    private void sendBroadcast() {
+        Intent new_intent = new Intent();
+        new_intent.setAction(ACTION_STRING_SERVICE);
+        sendBroadcast(new_intent);
     }
 
 
