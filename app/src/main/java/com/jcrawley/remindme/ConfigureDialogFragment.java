@@ -89,7 +89,6 @@ public class ConfigureDialogFragment extends DialogFragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
-
             @Override
             public void afterTextChanged(Editable editable) {
                 removeNewValueIfOutsideAcceptableRange(editable, 99, minutesStr);
@@ -109,7 +108,6 @@ public class ConfigureDialogFragment extends DialogFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
-
 
             @Override
             public void afterTextChanged(Editable editable) {
