@@ -10,6 +10,8 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.jcrawley.remindme.CountdownTimer;
+
 public class TimerService extends Service {
 
     private final Context context;
@@ -17,9 +19,13 @@ public class TimerService extends Service {
     private final IBinder mBinder = new MyBinder();
     private static final String ACTION_STRING_SERVICE = "TimerService";
     private static final String ACTION_STRING_ACTIVITY = "ToActivity";
+    private CountdownTimer countdownTimer;
+    private String minutes, seconds;
 
     public TimerService() {
         context = TimerService.this;
+        //countdownTimer = new CountdownTimer(this, 5);
+        //countdownTimer.setTime(Integer.parseInt(minutes), Integer.parseInt(seconds));
     }
 
 

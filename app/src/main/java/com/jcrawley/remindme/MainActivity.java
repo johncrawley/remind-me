@@ -14,7 +14,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -89,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+
     private void log(String msg){
         System.out.println("^^^ MainActivity: " + msg);
     }
@@ -103,6 +103,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //send broadcast from activity to all receivers listening to the action "ACTION_STRING_SERVICE"
     private void sendBroadcast() {
+        Intent new_intent = new Intent();
+        new_intent.setAction(ACTION_STRING_SERVICE);
+        sendBroadcast(new_intent);
+    }
+
+
+    private void sendBroadcastToStartTimer() {
+        Intent new_intent = new Intent();
+        new_intent.setAction(ACTION_STRING_SERVICE);
+        sendBroadcast(new_intent);
+    }
+
+
+    private void sendBroadCastToResetTimer() {
         Intent new_intent = new Intent();
         new_intent.setAction(ACTION_STRING_SERVICE);
         sendBroadcast(new_intent);
