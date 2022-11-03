@@ -9,12 +9,6 @@ import android.content.Intent;
 import android.graphics.Color;
 
 
-/**
- * Created by john on 05/01/18.
- *
- * Handles the Creation of a notification
- */
-
 public class TimesUpNotifier {
 
     private final Context context;

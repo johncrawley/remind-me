@@ -66,9 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         log("Entered registerBroadcastReceiver()");
         if (activityReceiver != null) {
             log("activityReceiver is not null, creating the intent filter and registering the receiver!");
-            //Create an intent filter to listen to the broadcast sent with the action "ACTION_STRING_ACTIVITY"
             IntentFilter intentFilter = new IntentFilter(ACTION_STRING_ACTIVITY);
-            //Map the intent filter to the receiver
             registerReceiver(activityReceiver, intentFilter);
         }
         else{
