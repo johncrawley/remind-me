@@ -19,6 +19,13 @@ public class TimerService extends Service {
     private final IBinder mBinder = new MyBinder();
     private static final String ACTION_STRING_SERVICE = "TimerService";
     private static final String ACTION_STRING_ACTIVITY = "ToActivity";
+    public static final String ACTION_START_TIMER = "StartTimer";
+    public static final String ACTION_STOP_TIMER = "StopTimer";
+    public static final String ACTION_RESET_TIMER = "ResetTimer";
+
+    public static final String TAG_MINUTES = "TimerServiceMinutes";
+    public static final String TAG_SECONDS = "TimerServiceSeconds";
+
     private CountdownTimer countdownTimer;
     private String minutes, seconds;
 

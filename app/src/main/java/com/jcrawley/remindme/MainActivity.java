@@ -80,10 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Start the service on launching the application
         startService(new Intent(this, TimerService.class));
         log("Service should have started around about now");
-        findViewById(R.id.testButton).setOnClickListener(v -> {
-            log("Sending broadcast to service");
-            sendBroadcast();
-        });
     }
 
 
@@ -111,6 +107,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent new_intent = new Intent();
         new_intent.setAction(ACTION_STRING_SERVICE);
         sendBroadcast(new_intent);
+    }
+
+
+    private void sendStartTimerBroadcast() {
+        Intent intent = new Intent(TimerService.ACTION_START_TIMER);
+        intent.putExtra(TimerService.TAG_MINUTES, viewModel.mins);
+        intent.putExtra(TimerService.TAG_SECONDS, viewModel.secs);
+        sendBroadcast(intent);
     }
 
 
