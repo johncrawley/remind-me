@@ -20,8 +20,8 @@ import androidx.lifecycle.ViewModelProvider;
 public class ConfigureDialogFragment extends DialogFragment {
 
 
-    private String minutesStr;
-    private String secondsStr;
+    private String minutesStr = "";
+    private String secondsStr = "";
     private MainViewModel viewModel;
     private EditText minutesEditText;
     private EditText secondsEditText;
@@ -54,8 +54,8 @@ public class ConfigureDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         minutesStr = "";
-        minutesEditText = getEditTextAndAssignString(view, R.id.minutesInputEditText, viewModel.mins);
-        secondsEditText = getEditTextAndAssignString(view, R.id.secondsInputEditText, viewModel.secs);
+        minutesEditText = getEditTextForNumberAndAssignString(view, R.id.minutesInputEditText, viewModel.mins);
+        secondsEditText = getEditTextForNumberAndAssignString(view, R.id.secondsInputEditText, viewModel.secs);
         messageEditText = getEditTextAndAssignString(view, R.id.messageInputEditText, viewModel.reminderMessage);
         setupMinutesWatcher();
         setupSecondsWatcher();
@@ -78,17 +78,27 @@ public class ConfigureDialogFragment extends DialogFragment {
     }
 
 
+    private EditText getEditTextForNumberAndAssignString(View parentView, int id, String str){
+        EditText editText = parentView.findViewById(id);
+        if(str != null) {
+            editText.setText(str.trim().isEmpty() ? "0" : str);
+        }
+        editText.setOnFocusChangeListener((view, b) -> setContentsToZeroIfBlank(view));
+        return editText;
+    }
+
+
+    private void setContentsToZeroIfBlank(View view){
+        EditText editText = (EditText) view;
+        if(editText.getText().toString().isEmpty()){
+            editText.setText("0");
+        }
+    }
+
     private void setupMinutesWatcher(){
-
         minutesEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
+            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {
                 removeNewValueIfOutsideAcceptableRange(editable, 99, minutesStr);
@@ -99,16 +109,9 @@ public class ConfigureDialogFragment extends DialogFragment {
 
 
     private void setupSecondsWatcher(){
-
         secondsEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
+            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {
                 removeNewValueIfOutsideAcceptableRange(editable, 59, secondsStr);
@@ -155,8 +158,7 @@ public class ConfigureDialogFragment extends DialogFragment {
         if(str.isEmpty()){
             return;
         }
-        int editedNumber = Integer.parseInt(str);
-        if(editedNumber > limit){
+        if(Integer.parseInt(str) > limit){
             editable.clear();
             editable.append(previousValue);
         }
