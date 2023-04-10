@@ -1,6 +1,5 @@
 package com.jcrawley.remindme;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -95,6 +94,7 @@ public class ConfigureDialogFragment extends DialogFragment {
         }
     }
 
+
     private void setupMinutesWatcher(){
         minutesEditText.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -131,18 +131,25 @@ public class ConfigureDialogFragment extends DialogFragment {
 
 
     public void onDismiss(@NonNull DialogInterface dialog){
-        Activity activity = getActivity();
-        if(activity instanceof CustomDialogCloseListener) {
-            viewModel.mins = minutesEditText.getText().toString();
-            viewModel.secs = secondsEditText.getText().toString();
-            int minutes = parse(viewModel.mins);
-            int seconds = parse(viewModel.secs);
-            viewModel.reminderMessage = messageEditText.getText().toString();
-            Preferences preferences = new Preferences(activity);
-            preferences.saveSettings(seconds, minutes, viewModel.reminderMessage);
-            ((CustomDialogCloseListener) activity).handleDialogClose(dialog, minutes, seconds);
+        super.onDismiss(dialog);
+        MainActivity activity = (MainActivity) getActivity();
+        updateViewModel();
+        int minutes = parse(viewModel.mins);
+        int seconds = parse(viewModel.secs);
+        Preferences preferences = new Preferences(activity);
+        preferences.saveSettings(seconds, minutes, viewModel.reminderMessage);
+        if(activity != null){
+            activity.handleDialogClose(minutes, seconds);
         }
     }
+
+
+    private void updateViewModel(){
+        viewModel.mins = minutesEditText.getText().toString();
+        viewModel.secs = secondsEditText.getText().toString();
+        viewModel.reminderMessage = messageEditText.getText().toString();
+    }
+
 
 
     private int parse(String str){
