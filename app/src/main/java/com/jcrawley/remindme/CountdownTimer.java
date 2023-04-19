@@ -4,37 +4,41 @@ import com.jcrawley.remindme.tasks.TimerTaskRunner;
 
 public class CountdownTimer  {
 
-    private final MainActivity view;
+    private MainActivity view;
     private final int SECONDS_PER_MINUTE = 60;
     private boolean isTimerRunning = false;
     private final TimerTaskRunner timerTaskRunner;
     private int timerStartingValue;
     private int currentSeconds;
-    private final MainViewModel viewModel;
 
 
-    public CountdownTimer(MainActivity view, int initialMinutes){
-        this.view = view;
+    public CountdownTimer(int initialMinutes){
         timerTaskRunner = new TimerTaskRunner();
-        viewModel = view.getViewModel();
         currentSeconds = initialMinutes * SECONDS_PER_MINUTE;
     }
 
 
+    public void setView(MainActivity mainActivity){
+        this.view = mainActivity;
+    }
+
+
     public void resetTime(){
-        if(isTimerRunning && viewModel.doesTimerStopOnReset){
+        if(isTimerRunning){
             stopTimer();
         }
         currentSeconds = timerStartingValue;
         int minutes = timerStartingValue / 60;
         int seconds = timerStartingValue % 60;
-        view.setCurrentCountdownValue( minutes, seconds);
-        resetStartButton();
+        if(view != null) {
+            view.setCurrentCountdownValue(minutes, seconds);
+            resetStartButton();
+        }
     }
 
 
     public void resetStartButton(){
-        if(!isTimerRunning){
+        if(!isTimerRunning && view != null){
             view.enableAndShowStartButton();
         }
     }
@@ -48,9 +52,12 @@ public class CountdownTimer  {
 
     public void startTimer() {
         isTimerRunning = true;
+        timerTaskRunner.startTimer(this);
+        if(view == null){
+            return;
+        }
         view.showPauseButton();
         view.showResetButton();
-        timerTaskRunner.startTimer(this );
         view.changeCountdownColorOff();
     }
 
@@ -66,25 +73,34 @@ public class CountdownTimer  {
 
     private void pauseTimer() {
         isTimerRunning = false;
+        timerTaskRunner.stopTimer();
+        if(view == null){
+            return;
+        }
         view.showResumeButton();
         view.enableSetButton();
         view.changeCountdownColorOff();
-        timerTaskRunner.stopTimer();
     }
 
 
     private void stopTimer(){
         isTimerRunning = false;
+        timerTaskRunner.stopTimer();
+        if(view == null){
+            return;
+        }
         view.enableSetButton();
         view.changeCountdownColorOff();
         view.enableAndShowStartButton();
-        timerTaskRunner.stopTimer();
     }
 
 
     public void setCurrentCountdownValue(int currentValue) {
         int minutes = getClockMinutes(currentValue);
         int seconds = getClockSeconds(currentValue);
+        if(view == null){
+            return;
+        }
         view.setCurrentCountdownValue(minutes, seconds);
     }
 
@@ -109,6 +125,9 @@ public class CountdownTimer  {
 
 
     private void onCountdownComplete(){
+        if(view == null){
+            return;
+        }
         view.issueNotification();
         view.showStartButton();
         view.disableStartButton();

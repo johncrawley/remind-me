@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupViews();
         setupViewModel();
         initAnimation();
-        countdownTimer = new CountdownTimer(this, 5);
+        countdownTimer = new CountdownTimer(5);
+        countdownTimer.setView(this);
         countdownTimer.setTime(Integer.parseInt(viewModel.mins), Integer.parseInt(viewModel.secs));
         registerBroadcastReceiver();
         startService();
