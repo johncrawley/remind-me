@@ -5,45 +5,45 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
+
+import android.content.ComponentName;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.jcrawley.remindme.service.TimerService;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, MainView {
 
 
     private TextView currentCountdownText;
     private TextView timesUpMessageText;
     private Button setButton, startStopButton;
-    private CountdownTimer countdownTimer;
     private MainViewModel viewModel;
     private boolean isInFront;
     private Animation displayTimesUpTextAnimation;
     private TimesUpNotifier timesUpNotifier;
-    private static final String ACTION_STRING_SERVICE = "TimerService";
-    private static final String ACTION_STRING_ACTIVITY = "ToActivity";
+    private TimerService timerService;
 
-    //STEP1: Create a broadcast receiver
-    private final BroadcastReceiver activityReceiver = new BroadcastReceiver() {
 
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            log("Broadcast receiver, message received!");
-            Toast.makeText(getApplicationContext(), "received message in activity..!", Toast.LENGTH_SHORT).show();
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            TimerService.LocalBinder binder = (TimerService.LocalBinder) service;
+            timerService = binder.getService();
+            timerService.setView(MainActivity.this);
+            timerService.setTime(Integer.parseInt(viewModel.mins), Integer.parseInt(viewModel.secs));
+            log("Service connected");
         }
+        @Override public void onServiceDisconnected(ComponentName arg0) {}
     };
 
 
@@ -54,32 +54,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupViews();
         setupViewModel();
         initAnimation();
-        countdownTimer = new CountdownTimer(5);
-        countdownTimer.setView(this);
-        countdownTimer.setTime(Integer.parseInt(viewModel.mins), Integer.parseInt(viewModel.secs));
-        registerBroadcastReceiver();
-        startService();
+        startForegroundService();
     }
 
 
-    private void registerBroadcastReceiver(){
-        log("Entered registerBroadcastReceiver()");
-        if (activityReceiver != null) {
-            log("activityReceiver is not null, creating the intent filter and registering the receiver!");
-            IntentFilter intentFilter = new IntentFilter(ACTION_STRING_ACTIVITY);
-            registerReceiver(activityReceiver, intentFilter);
-        }
-        else{
-            log("activity receiver is null, won't be doing any registering!");
-        }
-    }
-
-
-    private void startService(){
-        log("Entered startService()");
-        //Start the service on launching the application
-        startService(new Intent(this, TimerService.class));
-        log("Service should have started around about now");
+    private void startForegroundService(){
+        Intent mediaPlayerServiceIntent = new Intent(this, TimerService.class);
+        getApplicationContext().startForegroundService(mediaPlayerServiceIntent);
+        getApplicationContext().bindService(mediaPlayerServiceIntent, serviceConnection, 0);
     }
 
 
@@ -87,41 +69,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         System.out.println("^^^ MainActivity: " + msg);
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-      log( "onDestroy");
-        //STEP3: Unregister the receiver
-        unregisterReceiver(activityReceiver);
-    }
 
-    //send broadcast from activity to all receivers listening to the action "ACTION_STRING_SERVICE"
-    private void sendBroadcast() {
-        Intent new_intent = new Intent();
-        new_intent.setAction(ACTION_STRING_SERVICE);
-        sendBroadcast(new_intent);
-    }
-
-
-    private void sendBroadcastToStartTimer() {
-        Intent new_intent = new Intent();
-        new_intent.setAction(ACTION_STRING_SERVICE);
-        sendBroadcast(new_intent);
-    }
-
-
-    private void sendStartTimerBroadcast() {
-        Intent intent = new Intent(TimerService.ACTION_START_TIMER);
-        intent.putExtra(TimerService.TAG_MINUTES, viewModel.mins);
-        intent.putExtra(TimerService.TAG_SECONDS, viewModel.secs);
-        sendBroadcast(intent);
-    }
-
-
-    private void sendBroadCastToResetTimer() {
-        Intent new_intent = new Intent();
-        new_intent.setAction(ACTION_STRING_SERVICE);
-        sendBroadcast(new_intent);
     }
 
 
@@ -204,11 +156,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public MainViewModel getViewModel(){
-        return viewModel;
-    }
-
-
     private void cancelNotification(){
         if(timesUpNotifier == null){
             return;
@@ -267,13 +214,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public void setTimerRunningStatus(CountdownTimer.TimerState timerState) {
+        switch (timerState){
+            case RUNNING:
+                showPauseButton();
+                enableSetButton();
+                showResetButton();
+                break;
+            case STOPPED:
+                showStartButton();
+                showResetButton();
+                break;
+
+            case PAUSED:
+                showResumeButton();
+                enableSetButton();
+                showResetButton();
+        }
+    }
+
+
     public void enableSetButton() {
         setButton.setEnabled(true);
     }
 
 
     public void disableStartButton() {
-        runOnUiThread(() ->startStopButton.setEnabled(false) );
+        runOnUiThread(() -> startStopButton.setEnabled(false) );
     }
 
 
@@ -307,11 +275,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = view.getId();
 
         if(id == R.id.setButton){
-            countdownTimer.resetTime();
+            timerService.resetTime();
             hideTimesUpText();
         }
         else if(id == R.id.startStopButton){
-            countdownTimer.startStop();
+            timerService.startStop();
         }
         else if(id == R.id.currentCountdownText){
             startDialogFragment();
@@ -321,8 +289,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void handleDialogClose(int minutes, int seconds) {
         setCurrentCountdownValue(minutes, seconds);
-        if(countdownTimer != null) {
-            countdownTimer.setTime(minutes, seconds);
+        if(timerService != null) {
+            timerService.setTime(minutes, seconds);
         }
     }
 

@@ -23,7 +23,8 @@
         </activity>
         <service
             android:name=".service.TimerService"
-            android:label="TimerService" >
+            android:label="TimerService"
+            android:stopWithTask="true">
         </service>
     </application>
 

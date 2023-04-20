@@ -4,12 +4,14 @@ import com.jcrawley.remindme.tasks.TimerTaskRunner;
 
 public class CountdownTimer  {
 
-    private MainActivity view;
+    private MainView view;
     private final int SECONDS_PER_MINUTE = 60;
     private boolean isTimerRunning = false;
     private final TimerTaskRunner timerTaskRunner;
     private int timerStartingValue;
     private int currentSeconds;
+    public enum TimerState { STOPPED, RUNNING, PAUSED }
+    private TimerState currentState = TimerState.STOPPED;
 
 
     public CountdownTimer(int initialMinutes){
@@ -18,8 +20,10 @@ public class CountdownTimer  {
     }
 
 
-    public void setView(MainActivity mainActivity){
-        this.view = mainActivity;
+    public void setAndUpdateView(MainView view){
+        this.view = view;
+        setCurrentCountdownValue(currentSeconds);
+        view.setTimerRunningStatus(currentState);
     }
 
 
@@ -51,6 +55,7 @@ public class CountdownTimer  {
 
 
     public void startTimer() {
+        currentState = TimerState.RUNNING;
         isTimerRunning = true;
         timerTaskRunner.startTimer(this);
         if(view == null){
@@ -72,6 +77,7 @@ public class CountdownTimer  {
 
 
     private void pauseTimer() {
+        currentState = TimerState.PAUSED;
         isTimerRunning = false;
         timerTaskRunner.stopTimer();
         if(view == null){
@@ -84,6 +90,7 @@ public class CountdownTimer  {
 
 
     private void stopTimer(){
+        currentState = TimerState.STOPPED;
         isTimerRunning = false;
         timerTaskRunner.stopTimer();
         if(view == null){
