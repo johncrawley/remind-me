@@ -1,5 +1,7 @@
 package com.jcrawley.remindme.service;
 
+import static com.jcrawley.remindme.NotificationHelper.NOTIFICATION_ID;
+
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
@@ -9,31 +11,37 @@ import android.os.IBinder;
 import com.jcrawley.remindme.CountdownTimer;
 import com.jcrawley.remindme.MainView;
 import com.jcrawley.remindme.NotificationHelper;
+import com.jcrawley.remindme.R;
 
 public class TimerService extends Service {
 
     private final IBinder binder = new LocalBinder();
     private final CountdownTimer countdownTimer;
-    private final NotificationHelper notificationHelper;
-    final static int NOTIFICATION_ID = 10011;
+    private NotificationHelper notificationHelper;
 
 
     public TimerService() {
         countdownTimer = new CountdownTimer(10);
-        notificationHelper = new NotificationHelper(this, this);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        notificationHelper = new NotificationHelper(this, getString(R.string.app_name));
+        countdownTimer.setNotificationHelper(notificationHelper);
         moveToForeground();
     }
 
 
     private void moveToForeground(){
         notificationHelper.init();
-        Notification notification = notificationHelper.createNotification("Timer Ready", "");
+        String initialMessage = getString(R.string.notification_initial_message);
+        Notification notification = createNotificationForCurrentTime(initialMessage);
         startForeground(NOTIFICATION_ID, notification);
+    }
+
+    private Notification createNotificationForCurrentTime(String status){
+        return notificationHelper.createNotification(status, countdownTimer.getCurrentTime());
     }
 
 
@@ -79,7 +87,6 @@ public class TimerService extends Service {
     public void setTime(int minutes, int seconds){
         countdownTimer.setTime(minutes, seconds);
     }
-
 
 
     @Override

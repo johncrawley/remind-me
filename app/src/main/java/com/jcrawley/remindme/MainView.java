@@ -6,7 +6,7 @@ public interface MainView {
         void showPauseButton();
         void showResetButton();
         void setCurrentCountdownValue(int minutes, int seconds);
-        void issueNotification();
+        void notifyTimesUp();
         void showStartButton();
         void disableStartButton();
         void enableAndShowStartButton();

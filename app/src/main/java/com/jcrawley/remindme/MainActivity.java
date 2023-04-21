@@ -142,17 +142,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void issueNotification(){
+    public void notifyTimesUp(){
         showTimesUpText();
-        playSound();
-        if(isInFront){
-            return;
-        }
-        runOnUiThread(() -> {
-            timesUpNotifier = new TimesUpNotifier(MainActivity.this, viewModel);
-            timesUpNotifier.issueNotification();
-
-        });
+        //playSound();
     }
 
 

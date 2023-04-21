@@ -12,6 +12,7 @@ public class CountdownTimer  {
     private int currentSeconds;
     public enum TimerState { STOPPED, RUNNING, PAUSED }
     private TimerState currentState = TimerState.STOPPED;
+    private NotificationHelper notificationHelper;
 
 
     public CountdownTimer(int initialMinutes){
@@ -27,15 +28,18 @@ public class CountdownTimer  {
     }
 
 
+    public void setNotificationHelper(NotificationHelper notificationHelper){
+        this.notificationHelper = notificationHelper;
+    }
+
+
     public void resetTime(){
         if(isTimerRunning){
             stopTimer();
         }
         currentSeconds = timerStartingValue;
-        int minutes = timerStartingValue / 60;
-        int seconds = timerStartingValue % 60;
         if(view != null) {
-            view.setCurrentCountdownValue(minutes, seconds);
+            view.setCurrentCountdownValue(getMinutes(), getSeconds());
             resetStartButton();
         }
     }
@@ -48,11 +52,31 @@ public class CountdownTimer  {
     }
 
 
+    public String getCurrentTime(){
+        int minutes = getMinutes();
+        int seconds = getSeconds();
+
+        return getClockStringFor(minutes) + ":" + getClockStringFor(seconds);
+    }
+
+
+    private String getClockStringFor(int number){
+        String numberStr = String.valueOf(number);
+        return number < 10 ? "0" + numberStr : numberStr;
+    }
+
     public void setTime(int minutes, int seconds){
         timerStartingValue = (minutes * SECONDS_PER_MINUTE) + seconds;
         currentSeconds = timerStartingValue;
     }
 
+    private int getMinutes(){
+        return currentSeconds / 60;
+    }
+
+    private int getSeconds(){
+        return currentSeconds % 60;
+    }
 
     public void startTimer() {
         currentState = TimerState.RUNNING;
@@ -109,6 +133,7 @@ public class CountdownTimer  {
             return;
         }
         view.setCurrentCountdownValue(minutes, seconds);
+        notificationHelper.updateNotification("counting down", getCurrentTime());
     }
 
 
@@ -135,7 +160,8 @@ public class CountdownTimer  {
         if(view == null){
             return;
         }
-        view.issueNotification();
+        notificationHelper.updateNotification("counting down", getCurrentTime());
+        view.notifyTimesUp();
         view.showStartButton();
         view.disableStartButton();
     }

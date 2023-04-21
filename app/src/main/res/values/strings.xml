@@ -17,4 +17,5 @@
     <string name="configure_dialog_activity">Configure Timer</string>
     <string name="notification_title">Reminder</string>
     <string name="notification_default_message">Time\'s up!</string>
+    <string name="notification_initial_message">Ready</string>
 </resources>
