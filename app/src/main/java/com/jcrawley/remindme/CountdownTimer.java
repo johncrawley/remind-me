@@ -1,5 +1,8 @@
 package com.jcrawley.remindme;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+
 import com.jcrawley.remindme.tasks.TimerTaskRunner;
 
 public class CountdownTimer  {
@@ -13,9 +16,11 @@ public class CountdownTimer  {
     public enum TimerState { STOPPED, RUNNING, PAUSED }
     private TimerState currentState = TimerState.STOPPED;
     private NotificationHelper notificationHelper;
+    private Context context;
 
 
-    public CountdownTimer(int initialMinutes){
+    public CountdownTimer(Context context, int initialMinutes){
+        this.context = context;
         timerTaskRunner = new TimerTaskRunner();
         currentSeconds = initialMinutes * SECONDS_PER_MINUTE;
     }
@@ -100,6 +105,15 @@ public class CountdownTimer  {
     }
 
 
+    private void playSoundOnTimesUp(){
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.alert1);
+        try{
+            mediaPlayer.start();
+
+        }catch(Exception e){e.printStackTrace();}
+    }
+
+
     private void pauseTimer() {
         currentState = TimerState.PAUSED;
         isTimerRunning = false;
@@ -133,7 +147,6 @@ public class CountdownTimer  {
             return;
         }
         view.setCurrentCountdownValue(minutes, seconds);
-        notificationHelper.updateNotification("counting down", getCurrentTime());
     }
 
 
@@ -143,7 +156,12 @@ public class CountdownTimer  {
         if(currentSeconds == 0){
             onCountdownComplete();
             stopTimer();
+            playSoundOnTimesUp();
+            notificationHelper.sendTimesUpNotification("Times up");
+
+            return;
         }
+        notificationHelper.updateNotification("counting down", getCurrentTime());
     }
 
 

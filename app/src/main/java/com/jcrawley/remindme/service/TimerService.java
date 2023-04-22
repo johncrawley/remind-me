@@ -5,10 +5,12 @@ import static com.jcrawley.remindme.NotificationHelper.NOTIFICATION_ID;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 
 import com.jcrawley.remindme.CountdownTimer;
+import com.jcrawley.remindme.MainActivity;
 import com.jcrawley.remindme.MainView;
 import com.jcrawley.remindme.NotificationHelper;
 import com.jcrawley.remindme.R;
@@ -16,18 +18,19 @@ import com.jcrawley.remindme.R;
 public class TimerService extends Service {
 
     private final IBinder binder = new LocalBinder();
-    private final CountdownTimer countdownTimer;
+    private CountdownTimer countdownTimer;
     private NotificationHelper notificationHelper;
 
 
     public TimerService() {
-        countdownTimer = new CountdownTimer(10);
     }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        notificationHelper = new NotificationHelper(this, getString(R.string.app_name));
+        notificationHelper = new NotificationHelper(this);
+        countdownTimer = new CountdownTimer(getApplicationContext(), 10);
         countdownTimer.setNotificationHelper(notificationHelper);
         moveToForeground();
     }

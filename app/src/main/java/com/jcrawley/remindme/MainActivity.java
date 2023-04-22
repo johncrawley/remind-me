@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -30,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MainViewModel viewModel;
     private boolean isInFront;
     private Animation displayTimesUpTextAnimation;
-    private TimesUpNotifier timesUpNotifier;
     private TimerService timerService;
 
 
@@ -87,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         ft.addToBackStack(null);
         ft.commit();
-        cancelNotification();
         super.onResume();
     }
 
@@ -148,14 +145,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void cancelNotification(){
-        if(timesUpNotifier == null){
-            return;
-        }
-        timesUpNotifier.dismissNotification();
-    }
-
-
     private void initAnimation(){
         displayTimesUpTextAnimation = new ScaleAnimation(1.0f,1.0f, 0.1f, 1.0f, 0.5f, 1f);
         displayTimesUpTextAnimation.setDuration(500);
@@ -175,15 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void hideTimesUpText(){
         timesUpMessageText.clearAnimation();
         timesUpMessageText.setVisibility(View.INVISIBLE);
-    }
-
-
-    private void playSound(){
-        MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.alert1);
-        try{
-            mediaPlayer.start();
-
-        }catch(Exception e){e.printStackTrace();}
     }
 
 
