@@ -43,6 +43,7 @@ public class TimerService extends Service {
         startForeground(NOTIFICATION_ID, notification);
     }
 
+
     private Notification createNotificationForCurrentTime(String status){
         return notificationHelper.createNotification(status, countdownTimer.getCurrentTime());
     }

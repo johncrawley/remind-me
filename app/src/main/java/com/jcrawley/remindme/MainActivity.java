@@ -13,6 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -53,6 +56,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupViewModel();
         initAnimation();
         startForegroundService();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_buttons, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.menu_button_configure) {
+            startConfigureDialogFragment();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -127,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void startDialogFragment(){
+    private void startConfigureDialogFragment(){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
@@ -252,9 +273,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else if(id == R.id.startStopButton){
             timerService.startStop();
-        }
-        else if(id == R.id.currentCountdownText){
-            startDialogFragment();
         }
     }
 
