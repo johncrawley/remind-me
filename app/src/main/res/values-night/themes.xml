@@ -1,16 +1,36 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.RemindMe" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.RemindMe" parent="Theme.Material3.Dark">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorPrimaryVariant">@color/primaryVariantDark</item>
+        <item name="colorOnPrimary">@color/appBar</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="buttonStyle">@style/customButtonStyle</item>
+        <item name="materialButtonStyle">@style/customMaterialOutlineButtonStyle</item>
     </style>
+
+
+    <style name="customButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/dark_buttonText</item>
+        <item name="android:backgroundTint">@color/dark_buttonBackgroundTint</item>
+    </style>
+
+
+    <style name="customMaterialOutlineButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/dark_buttonText</item>
+        <item name="cornerRadius">15dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="backgroundColor">@color/dark_buttonBackgroundTint</item>
+        <item name="strokeColor">@color/dark_buttonBackgroundTint</item>
+    </style>
+
 </resources>
