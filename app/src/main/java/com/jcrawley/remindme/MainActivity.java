@@ -41,11 +41,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TimerService.LocalBinder binder = (TimerService.LocalBinder) service;
             timerService = binder.getService();
             timerService.setView(MainActivity.this);
-            timerService.setTime(Integer.parseInt(viewModel.mins), Integer.parseInt(viewModel.secs));
+            timerService.setTime(viewModel.mins, viewModel.secs);
             log("Service connected");
         }
         @Override public void onServiceDisconnected(ComponentName arg0) {}
     };
+
+
 
 
     @Override
@@ -92,20 +94,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-
     }
 
 
     @Override
     public void onResume(){
         isInFront = true;
-        FragmentTransaction ft =  getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-        ft.commit();
         super.onResume();
     }
 
@@ -149,14 +143,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void startConfigureDialogFragment(){
+        String tagName = "RemindMeConfigDialog";
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tagName);
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
         ConfigureDialogFragment configureDialogFragment = ConfigureDialogFragment.newInstance();
-        configureDialogFragment.show(ft, "dialog");
+        configureDialogFragment.show(ft, tagName);
     }
 
 

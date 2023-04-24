@@ -93,6 +93,23 @@ public class TimerService extends Service {
     }
 
 
+    public void setTime(String minutesStr, String secondsStr){
+        if (countdownTimer.isInitialized()) {
+            return;
+        }
+        int minutes = getIntFor(minutesStr);
+        int seconds = getIntFor(secondsStr);
+        countdownTimer.setTime(minutes, seconds);
+    }
+
+
+    private int getIntFor(String str){
+        return str.isEmpty() ? 0 : Integer.parseInt(str);
+    }
+
+
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();

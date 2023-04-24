@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+
 public class ConfigureDialogFragment extends DialogFragment {
 
 
@@ -132,15 +133,25 @@ public class ConfigureDialogFragment extends DialogFragment {
 
     public void onDismiss(@NonNull DialogInterface dialog){
         super.onDismiss(dialog);
-        MainActivity activity = (MainActivity) getActivity();
         updateViewModel();
-        int minutes = parse(viewModel.mins);
-        int seconds = parse(viewModel.secs);
-        Preferences preferences = new Preferences(activity);
-        preferences.saveSettings(seconds, minutes, viewModel.reminderMessage);
+        savePreferencesAndNotifyActivity();
+    }
+
+
+    private void savePreferencesAndNotifyActivity(){
+        MainActivity activity = (MainActivity) getActivity();
         if(activity != null){
+            int minutes = parse(viewModel.mins);
+            int seconds = parse(viewModel.secs);
+            saveSettingsToPreferences(activity, minutes, seconds);
             activity.handleDialogClose(minutes, seconds);
         }
+    }
+
+
+    private void saveSettingsToPreferences(MainActivity activity, int minutes, int seconds){
+        Preferences preferences = new Preferences(activity);
+        preferences.saveSettings(seconds, minutes, viewModel.reminderMessage);
     }
 
 

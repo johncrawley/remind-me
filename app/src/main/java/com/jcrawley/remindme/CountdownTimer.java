@@ -17,6 +17,7 @@ public class CountdownTimer  {
     private TimerState currentState = TimerState.STOPPED;
     private NotificationHelper notificationHelper;
     private Context context;
+    private boolean isInitialized;
 
 
     public CountdownTimer(Context context, int initialMinutes){
@@ -35,6 +36,11 @@ public class CountdownTimer  {
 
     public void setNotificationHelper(NotificationHelper notificationHelper){
         this.notificationHelper = notificationHelper;
+    }
+
+
+    public boolean isInitialized(){
+        return isInitialized;
     }
 
 
@@ -70,18 +76,23 @@ public class CountdownTimer  {
         return number < 10 ? "0" + numberStr : numberStr;
     }
 
+
     public void setTime(int minutes, int seconds){
+        isInitialized = true;
         timerStartingValue = (minutes * SECONDS_PER_MINUTE) + seconds;
         currentSeconds = timerStartingValue;
     }
+
 
     private int getMinutes(){
         return currentSeconds / 60;
     }
 
+
     private int getSeconds(){
         return currentSeconds % 60;
     }
+
 
     public void startTimer() {
         currentState = TimerState.RUNNING;
