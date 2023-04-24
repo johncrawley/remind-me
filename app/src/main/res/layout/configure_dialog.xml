@@ -1,56 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
+        android:background="?attr/dialog_window_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/minutes_input_layout"
-        android:layout_width="300dp"
+        android:layout_width="@dimen/configure_dialog_input_text_width"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="@dimen/configure_dialog_input_text_margin_horizontal"
+        android:layout_marginVertical="@dimen/configure_dialog_input_text_margin_vertical"
+        android:layout_gravity="center"
         android:hint="@string/enter_minutes_hint">
-
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:id="@+id/minutesInputEditText"
             android:imeOptions="actionDone"
             android:inputType="number"
             android:layout_height="wrap_content" />
-
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/seconds_input_layout"
-        android:layout_width="300dp"
+        android:layout_width="@dimen/configure_dialog_input_text_width"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="@dimen/configure_dialog_input_text_margin_horizontal"
+        android:layout_marginVertical="@dimen/configure_dialog_input_text_margin_vertical"
+        android:layout_gravity="center"
         android:hint="@string/enter_seconds_hint">
-
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:id="@+id/secondsInputEditText"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:layout_height="wrap_content" />
-
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/message_input_layout"
-        android:layout_width="300dp"
+        android:layout_width="@dimen/configure_dialog_input_text_width"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/configure_dialog_input_text_margin_horizontal"
+        android:layout_marginVertical="@dimen/configure_dialog_input_text_margin_vertical"
         android:hint="@string/enter_message_hint">
-
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:id="@+id/messageInputEditText"
@@ -63,7 +61,8 @@
         android:id="@+id/configOkButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/configure_dialog_ok_button_margin_vertical"
+        android:layout_marginHorizontal="@dimen/configure_dialog_ok_button_margin_horizontal"
         android:text="@string/config_ok_button" />
-
 
 </LinearLayout>

@@ -13,6 +13,8 @@
     <color name="background">#28292C</color>
     <color name="primaryVariantDark">#3B236C</color>
 
-    <color name="dark_buttonText">#9F9DA3</color>
+    <color name="dark_buttonText">#BDBBC1</color>
     <color name="dark_buttonBackgroundTint">#4E2C93</color>
+    <color name="dark_dialog_window_background">#222222</color>
+    <color name="dark_primary_color">#7237F4</color>
 </resources>

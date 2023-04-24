@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.RemindMe" parent="Theme.Material3.Dark">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/dark_primary_color</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="colorPrimaryVariant">@color/primaryVariantDark</item>
         <item name="colorOnPrimary">@color/appBar</item>
@@ -16,6 +16,7 @@
 
         <item name="buttonStyle">@style/customButtonStyle</item>
         <item name="materialButtonStyle">@style/customMaterialOutlineButtonStyle</item>
+        <item name="dialog_window_background">@color/dark_dialog_window_background</item>
     </style>
 
 
@@ -28,7 +29,7 @@
     <style name="customMaterialOutlineButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:textColor">@color/dark_buttonText</item>
         <item name="cornerRadius">15dp</item>
-        <item name="strokeWidth">1dp</item>
+        <item name="strokeWidth">2dp</item>
         <item name="backgroundColor">@color/dark_buttonBackgroundTint</item>
         <item name="strokeColor">@color/dark_buttonBackgroundTint</item>
     </style>
