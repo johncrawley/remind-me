@@ -3,7 +3,7 @@ package com.jcrawley.remindme;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class Preferences {
+public class TimerPreferences {
 
     private final Context context;
     private final String PREFERENCES_NAME = "reminderPreferences";
@@ -11,7 +11,7 @@ public class Preferences {
     private final String PREF_NAME_SECONDS= "seconds";
     private final String PREF_NAME_TIMES_UP_MESSAGE= "times_up_message";
 
-    Preferences(Context context){
+    public TimerPreferences(Context context){
         this.context = context;
     }
 

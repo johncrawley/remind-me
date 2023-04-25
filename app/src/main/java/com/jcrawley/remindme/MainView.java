@@ -1,12 +1,11 @@
 package com.jcrawley.remindme;
 
 public interface MainView {
-    
-    
+
         void showPauseButton();
         void showResetButton();
         void setCurrentCountdownValue(int minutes, int seconds);
-        void notifyTimesUp();
+        void notifyTimesUp(String timesUpMessage);
         void showStartButton();
         void disableStartButton();
         void enableAndShowStartButton();

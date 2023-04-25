@@ -18,7 +18,7 @@ public class TimerTaskRunner {
 
 
     public void startTimer(CountdownTimer countdownTimer){
-        future = scheduledExecutorService.scheduleWithFixedDelay(countdownTimer::countdownOneSecond, 0, 1, TimeUnit.SECONDS);
+        future = scheduledExecutorService.scheduleWithFixedDelay(countdownTimer::countDownOneSecond, 0, 1, TimeUnit.SECONDS);
     }
 
 

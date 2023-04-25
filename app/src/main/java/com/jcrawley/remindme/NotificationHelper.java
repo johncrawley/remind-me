@@ -11,6 +11,8 @@ import android.net.Uri;
 
 import androidx.core.app.NotificationCompat;
 
+import com.jcrawley.remindme.service.TimerService;
+
 
 public class NotificationHelper {
 
@@ -19,22 +21,22 @@ public class NotificationHelper {
     private PendingIntent pendingIntent;
     final static String NOTIFICATION_CHANNEL_ID = "com.jcrawley.musicplayer-notification";
     private NotificationManager notificationManager;
-
+    private TimerService timerService;
 
     public NotificationHelper(Context context) {
         this.context = context;
     }
 
 
-    public void init(){
+    public void init(TimerService timerService){
+        this.timerService = timerService;
         setupNotificationChannel();
         setupNotificationClickForActivity();
     }
-    NotificationChannel channel;
 
     private void setupNotificationChannel(){
         notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "j-crawley-remind-me-notification-channel",  NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "j-crawley-remind-me-notification-channel", NotificationManager.IMPORTANCE_DEFAULT);
         channel.setSound(null, null);
         channel.enableVibration(true);
         channel.setShowBadge(false);
@@ -82,9 +84,9 @@ public class NotificationHelper {
     }
 
 
-    public void sendTimesUpNotification(String message){
-       // setChannelOptionsForTimesUp();
-        notificationManager.notify(NOTIFICATION_ID, buildNotification("Times up", message, true));
+    public void sendTimesUpNotification(){
+        notificationManager.notify(NOTIFICATION_ID,
+                buildNotification(context.getString(R.string.notification_times_up_message), timerService.getTimesUpMessage(), true));
     }
 
 

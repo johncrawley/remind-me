@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.jcrawley.remindme.service.TimerService;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, MainView {
+public class MainActivity extends AppCompatActivity implements MainView {
 
 
     private TextView currentCountdownText;
@@ -41,13 +41,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TimerService.LocalBinder binder = (TimerService.LocalBinder) service;
             timerService = binder.getService();
             timerService.setView(MainActivity.this);
-            timerService.setTime(viewModel.mins, viewModel.secs);
+            timerService.setTime(viewModel.initialMinutes, viewModel.initialSeconds);
             log("Service connected");
         }
         @Override public void onServiceDisconnected(ComponentName arg0) {}
     };
-
-
 
 
     @Override
@@ -117,12 +115,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         viewModel.hasBeenInitialized = true;
-        Preferences preferences = new Preferences(MainActivity.this);
-        Settings settings = preferences.getSettings();
-        viewModel.secs = "" + settings.getSeconds();
-        viewModel.mins = "" + settings.getMinutes();
+        TimerPreferences timerPreferences = new TimerPreferences(MainActivity.this);
+        Settings settings = timerPreferences.getSettings();
+        viewModel.initialSeconds = String.valueOf(settings.getSeconds());
+        viewModel.initialMinutes = String.valueOf(settings.getMinutes());
         viewModel.reminderMessage = settings.getTimesUpMessage();
-        setCurrentCountdownValue(Integer.parseInt(viewModel.mins), Integer.parseInt(viewModel.secs));
+        setCurrentCountdownValue(Integer.parseInt(viewModel.initialMinutes), Integer.parseInt(viewModel.initialSeconds));
     }
 
 
@@ -130,15 +128,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         currentCountdownText = findViewById(R.id.currentCountdownText);
         timesUpMessageText = findViewById(R.id.timesUpMessageText);
         startStopButton = findViewById(R.id.startStopButton);
+        startStopButton.setOnClickListener((View v) -> timerService.startStop());
         setButton = findViewById(R.id.setButton);
-        setClickListener(setButton, startStopButton, currentCountdownText);
-    }
-
-
-    private void setClickListener(View... views){
-        for(View v : views){
-            v.setOnClickListener(this);
-        }
+        setButton.setOnClickListener((View v)->{
+            timerService.resetTime();
+            hideTimesUpText();
+        });
     }
 
 
@@ -150,13 +145,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        ConfigureDialogFragment configureDialogFragment = ConfigureDialogFragment.newInstance();
-        configureDialogFragment.show(ft, tagName);
+        SettingsDialogFragment settingsDialogFragment = SettingsDialogFragment.newInstance();
+        settingsDialogFragment.show(ft, tagName);
     }
 
 
-    public void notifyTimesUp(){
-        showTimesUpText();
+    public void notifyTimesUp(String timesUpMessage){
+        showTimesUpText(timesUpMessage);
         //playSound();
     }
 
@@ -168,9 +163,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void showTimesUpText(){
+    private void showTimesUpText(String timesUpMessage){
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> {
+            timesUpMessageText.setText(timesUpMessage);
             timesUpMessageText.setVisibility(View.VISIBLE);
             timesUpMessageText.startAnimation(displayTimesUpTextAnimation);
         });
@@ -258,24 +254,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-
-        if(id == R.id.setButton){
-            timerService.resetTime();
-            hideTimesUpText();
-        }
-        else if(id == R.id.startStopButton){
-            timerService.startStop();
-        }
-    }
-
-
-    public void handleDialogClose(int minutes, int seconds) {
+    public void assignSettings(int minutes, int seconds, String message) {
         setCurrentCountdownValue(minutes, seconds);
         if(timerService != null) {
-            timerService.setTime(minutes, seconds);
+            timerService.savePreferences(minutes, seconds, message);
         }
     }
 

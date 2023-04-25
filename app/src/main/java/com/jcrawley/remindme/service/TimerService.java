@@ -5,7 +5,6 @@ import static com.jcrawley.remindme.NotificationHelper.NOTIFICATION_ID;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -13,6 +12,8 @@ import com.jcrawley.remindme.CountdownTimer;
 import com.jcrawley.remindme.MainActivity;
 import com.jcrawley.remindme.MainView;
 import com.jcrawley.remindme.NotificationHelper;
+import com.jcrawley.remindme.Settings;
+import com.jcrawley.remindme.TimerPreferences;
 import com.jcrawley.remindme.R;
 
 public class TimerService extends Service {
@@ -20,6 +21,8 @@ public class TimerService extends Service {
     private final IBinder binder = new LocalBinder();
     private CountdownTimer countdownTimer;
     private NotificationHelper notificationHelper;
+    private TimerPreferences timerPreferences;
+    private String currentTimesUpMessage;
 
 
     public TimerService() {
@@ -30,17 +33,39 @@ public class TimerService extends Service {
     public void onCreate() {
         super.onCreate();
         notificationHelper = new NotificationHelper(this);
-        countdownTimer = new CountdownTimer(getApplicationContext(), 10);
+        timerPreferences = new TimerPreferences(this);
+        countdownTimer = new CountdownTimer(getApplicationContext());
+        setupPreferences();
         countdownTimer.setNotificationHelper(notificationHelper);
         moveToForeground();
     }
 
 
     private void moveToForeground(){
-        notificationHelper.init();
+        notificationHelper.init(this);
         String initialMessage = getString(R.string.notification_initial_message);
         Notification notification = createNotificationForCurrentTime(initialMessage);
         startForeground(NOTIFICATION_ID, notification);
+    }
+
+
+    private void setupPreferences(){
+        timerPreferences = new TimerPreferences(this);
+        Settings settings = timerPreferences.getSettings();
+        currentTimesUpMessage = settings.getTimesUpMessage();
+        countdownTimer.setTime(settings.getMinutes(), settings.getSeconds());
+    }
+
+
+    public void savePreferences(int minutes, int seconds, String message){
+        timerPreferences.saveSettings(seconds, minutes, message);
+        countdownTimer.setTime(minutes, seconds);
+        currentTimesUpMessage = message;
+    }
+
+
+    public String getTimesUpMessage(){
+        return currentTimesUpMessage;
     }
 
 
@@ -72,9 +97,13 @@ public class TimerService extends Service {
         return Service.START_NOT_STICKY;
     }
 
+    public void notifyViewOfTimesUp(){
+
+    }
+
 
     public void setView(MainView view){
-        countdownTimer.setAndUpdateView(view);
+        countdownTimer.setAndUpdateView(view, this);
     }
 
 
@@ -86,6 +115,8 @@ public class TimerService extends Service {
     public void startStop(){
         countdownTimer.startStop();
     }
+
+
 
 
     public void setTime(int minutes, int seconds){
@@ -106,8 +137,6 @@ public class TimerService extends Service {
     private int getIntFor(String str){
         return str.isEmpty() ? 0 : Integer.parseInt(str);
     }
-
-
 
 
     @Override

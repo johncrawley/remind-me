@@ -17,7 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 
-public class ConfigureDialogFragment extends DialogFragment {
+public class SettingsDialogFragment extends DialogFragment {
 
 
     private String minutesStr = "";
@@ -28,8 +28,8 @@ public class ConfigureDialogFragment extends DialogFragment {
     private EditText messageEditText;
 
 
-    static ConfigureDialogFragment newInstance() {
-        return new ConfigureDialogFragment();
+    static SettingsDialogFragment newInstance() {
+        return new SettingsDialogFragment();
     }
 
     @Override
@@ -54,8 +54,8 @@ public class ConfigureDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         minutesStr = "";
-        minutesEditText = getEditTextForNumberAndAssignString(view, R.id.minutesInputEditText, viewModel.mins);
-        secondsEditText = getEditTextForNumberAndAssignString(view, R.id.secondsInputEditText, viewModel.secs);
+        minutesEditText = getEditTextForNumberAndAssignString(view, R.id.minutesInputEditText, viewModel.initialMinutes);
+        secondsEditText = getEditTextForNumberAndAssignString(view, R.id.secondsInputEditText, viewModel.initialSeconds);
         messageEditText = getEditTextAndAssignString(view, R.id.messageInputEditText, viewModel.reminderMessage);
         setupMinutesWatcher();
         setupSecondsWatcher();
@@ -117,7 +117,7 @@ public class ConfigureDialogFragment extends DialogFragment {
             public void afterTextChanged(Editable editable) {
                 removeNewValueIfOutsideAcceptableRange(editable, 59, secondsStr);
                 secondsStr = editable.toString();
-                viewModel.secs = validate(secondsStr);
+                viewModel.initialSeconds = validate(secondsStr);
             }
         });
     }
@@ -134,33 +134,30 @@ public class ConfigureDialogFragment extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog){
         super.onDismiss(dialog);
         updateViewModel();
-        savePreferencesAndNotifyActivity();
+        saveSettings();
     }
 
 
-    private void savePreferencesAndNotifyActivity(){
+    private void saveSettings(){
         MainActivity activity = (MainActivity) getActivity();
         if(activity != null){
-            int minutes = parse(viewModel.mins);
-            int seconds = parse(viewModel.secs);
-            saveSettingsToPreferences(activity, minutes, seconds);
-            activity.handleDialogClose(minutes, seconds);
+            int minutes = parse(getStrFrom(minutesEditText));
+            int seconds = parse(getStrFrom(secondsEditText));
+            activity.assignSettings(minutes, seconds, viewModel.reminderMessage);
         }
     }
 
 
-    private void saveSettingsToPreferences(MainActivity activity, int minutes, int seconds){
-        Preferences preferences = new Preferences(activity);
-        preferences.saveSettings(seconds, minutes, viewModel.reminderMessage);
-    }
-
-
     private void updateViewModel(){
-        viewModel.mins = minutesEditText.getText().toString();
-        viewModel.secs = secondsEditText.getText().toString();
-        viewModel.reminderMessage = messageEditText.getText().toString();
+        viewModel.initialMinutes = getStrFrom(minutesEditText);
+        viewModel.initialSeconds = getStrFrom(secondsEditText);
+        viewModel.reminderMessage = getStrFrom(messageEditText);
     }
 
+
+    private String getStrFrom(EditText editText){
+        return editText.getText().toString();
+    }
 
 
     private int parse(String str){

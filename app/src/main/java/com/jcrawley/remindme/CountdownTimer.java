@@ -3,6 +3,7 @@ package com.jcrawley.remindme;
 import android.content.Context;
 import android.media.MediaPlayer;
 
+import com.jcrawley.remindme.service.TimerService;
 import com.jcrawley.remindme.tasks.TimerTaskRunner;
 
 public class CountdownTimer  {
@@ -18,17 +19,18 @@ public class CountdownTimer  {
     private NotificationHelper notificationHelper;
     private Context context;
     private boolean isInitialized;
+    private TimerService timerService;
 
 
-    public CountdownTimer(Context context, int initialMinutes){
+    public CountdownTimer(Context context){
         this.context = context;
         timerTaskRunner = new TimerTaskRunner();
-        currentSeconds = initialMinutes * SECONDS_PER_MINUTE;
     }
 
 
-    public void setAndUpdateView(MainView view){
+    public void setAndUpdateView(MainView view, TimerService timerService){
         this.view = view;
+        this.timerService = timerService;
         setCurrentCountdownValue(currentSeconds);
         view.setTimerRunningStatus(currentState);
     }
@@ -116,15 +118,6 @@ public class CountdownTimer  {
     }
 
 
-    private void playSoundOnTimesUp(){
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.alert1);
-        try{
-            mediaPlayer.start();
-
-        }catch(Exception e){e.printStackTrace();}
-    }
-
-
     private void pauseTimer() {
         currentState = TimerState.PAUSED;
         isTimerRunning = false;
@@ -161,18 +154,17 @@ public class CountdownTimer  {
     }
 
 
-    public void countdownOneSecond(){
+    public void countDownOneSecond(){
         currentSeconds = currentSeconds <= 0 ? 0 : currentSeconds -1;
         setCurrentCountdownValue(currentSeconds);
         if(currentSeconds == 0){
             onCountdownComplete();
             stopTimer();
             playSoundOnTimesUp();
-            notificationHelper.sendTimesUpNotification("Times up");
-
+            notificationHelper.sendTimesUpNotification();
             return;
         }
-        notificationHelper.updateNotification("counting down", getCurrentTime());
+        notificationHelper.updateNotification(getStr(R.string.menu_button_counting_down_message), getCurrentTime());
     }
 
 
@@ -189,10 +181,24 @@ public class CountdownTimer  {
         if(view == null){
             return;
         }
-        notificationHelper.updateNotification("counting down", getCurrentTime());
-        view.notifyTimesUp();
+        timerService.notifyViewOfTimesUp();
+
+        view.notifyTimesUp(timerService.getTimesUpMessage());
         view.showStartButton();
         view.disableStartButton();
+    }
+
+    private String getStr(int id){
+        return context.getString(id);
+    }
+
+
+    private void playSoundOnTimesUp(){
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.alert1);
+        try{
+            mediaPlayer.start();
+
+        }catch(Exception e){e.printStackTrace();}
     }
 
 }
