@@ -17,7 +17,7 @@ public class CountdownTimer  {
     public enum TimerState { STOPPED, RUNNING, PAUSED }
     private TimerState currentState = TimerState.STOPPED;
     private NotificationHelper notificationHelper;
-    private Context context;
+    private final Context context;
     private boolean isInitialized;
     private TimerService timerService;
 
@@ -52,7 +52,7 @@ public class CountdownTimer  {
         }
         currentSeconds = timerStartingValue;
         if(view != null) {
-            view.setCurrentCountdownValue(getMinutes(), getSeconds());
+            view.setCurrentCountdownValue(getMinutes(), getSeconds(), false);
             resetStartButton();
         }
     }
@@ -83,6 +83,9 @@ public class CountdownTimer  {
         isInitialized = true;
         timerStartingValue = (minutes * SECONDS_PER_MINUTE) + seconds;
         currentSeconds = timerStartingValue;
+        if(view != null) {
+            view.resetCurrentCountdownValue(minutes, seconds);
+        }
     }
 
 
@@ -150,7 +153,15 @@ public class CountdownTimer  {
         if(view == null){
             return;
         }
-        view.setCurrentCountdownValue(minutes, seconds);
+        view.setCurrentCountdownValue(minutes, seconds, isCritical(currentValue));
+    }
+
+
+
+    private boolean isCritical(int currentTimeLeft){
+        return currentTimeLeft < 5
+                || (timerStartingValue > 60 && currentTimeLeft < 15)
+                || (timerStartingValue > 600 && currentTimeLeft < 30);
     }
 
 

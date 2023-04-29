@@ -97,6 +97,7 @@ public class TimerService extends Service {
         return Service.START_NOT_STICKY;
     }
 
+
     public void notifyViewOfTimesUp(){
 
     }
@@ -118,19 +119,24 @@ public class TimerService extends Service {
 
 
 
-
     public void setTime(int minutes, int seconds){
         countdownTimer.setTime(minutes, seconds);
     }
 
 
     public void setTime(String minutesStr, String secondsStr){
+        log("entered setTime()");
         if (countdownTimer.isInitialized()) {
             return;
         }
         int minutes = getIntFor(minutesStr);
         int seconds = getIntFor(secondsStr);
         countdownTimer.setTime(minutes, seconds);
+    }
+
+
+    private void log(String msg){
+        System.out.println("^^^ TimerService: " + msg);
     }
 
 

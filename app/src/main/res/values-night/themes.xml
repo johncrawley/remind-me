@@ -3,9 +3,10 @@
     <style name="Theme.RemindMe" parent="Theme.Material3.Dark">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/dark_primary_color</item>
-        <item name="android:windowBackground">@color/background</item>
+        <item name="android:windowBackground">@color/dark_window_background</item>
         <item name="colorPrimaryVariant">@color/primaryVariantDark</item>
         <item name="colorOnPrimary">@color/appBar</item>
+        <item name="android:text">@color/dark_text</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>

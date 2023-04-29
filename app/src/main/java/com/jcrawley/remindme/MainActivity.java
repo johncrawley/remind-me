@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setupViewModel();
         initAnimation();
         startForegroundService();
+        updateTimerTextColor();
     }
 
 
@@ -120,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         viewModel.initialSeconds = String.valueOf(settings.getSeconds());
         viewModel.initialMinutes = String.valueOf(settings.getMinutes());
         viewModel.reminderMessage = settings.getTimesUpMessage();
-        setCurrentCountdownValue(Integer.parseInt(viewModel.initialMinutes), Integer.parseInt(viewModel.initialSeconds));
     }
 
 
@@ -179,17 +179,30 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
-    public void setCurrentCountdownValue(int currentMinutes, int currentSeconds) {
+    public void setCurrentCountdownValue(int currentMinutes, int currentSeconds, boolean isCritical) {
         runOnUiThread(() -> {
             String text = getTimeText(currentMinutes) + " : " + getTimeText(currentSeconds);
             currentCountdownText.setText(text);
+            viewModel.isTimeLeftCritical = isCritical;
+            updateTimerTextColor();
         });
+    }
+
+
+    public void resetCurrentCountdownValue(int currentMinutes, int currentSeconds) {
+        setCurrentCountdownValue(currentMinutes, currentSeconds, false);
     }
 
 
     public void enableAndShowStartButton() {
         this.startStopButton.setEnabled(true);
         this.startStopButton.setText(getResources().getString(R.string.button_start_label));
+    }
+
+
+    public void updateTimerTextColor(){
+        int colorId = viewModel.isTimeLeftCritical ? R.color.dark_timer_text_critical : R.color.dark_timer_text_normal;
+        currentCountdownText.setTextColor(getResources().getColor(colorId, null));
     }
 
 
@@ -210,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 showStartButton();
                 showResetButton();
                 break;
-
             case PAUSED:
                 showResumeButton();
                 enableSetButton();
@@ -255,7 +267,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 
     public void assignSettings(int minutes, int seconds, String message) {
-        setCurrentCountdownValue(minutes, seconds);
         if(timerService != null) {
             timerService.savePreferences(minutes, seconds, message);
         }

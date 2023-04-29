@@ -4,7 +4,8 @@ public interface MainView {
 
         void showPauseButton();
         void showResetButton();
-        void setCurrentCountdownValue(int minutes, int seconds);
+        void setCurrentCountdownValue(int minutes, int seconds, boolean isCritical);
+        void resetCurrentCountdownValue(int minutes, int seconds);
         void notifyTimesUp(String timesUpMessage);
         void showStartButton();
         void disableStartButton();
