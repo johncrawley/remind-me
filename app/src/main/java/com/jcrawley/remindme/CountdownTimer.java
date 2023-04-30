@@ -4,34 +4,39 @@ import android.content.Context;
 import android.media.MediaPlayer;
 
 import com.jcrawley.remindme.service.TimerService;
-import com.jcrawley.remindme.tasks.TimerTaskRunner;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class CountdownTimer  {
 
     private MainView view;
     private final int SECONDS_PER_MINUTE = 60;
     private boolean isTimerRunning = false;
-    private final TimerTaskRunner timerTaskRunner;
     private int timerStartingValue;
-    private int currentSeconds;
+    private int millisecondsRemaining;
     public enum TimerState { STOPPED, RUNNING, PAUSED }
     private TimerState currentState = TimerState.STOPPED;
     private NotificationHelper notificationHelper;
     private final Context context;
     private boolean isInitialized;
     private TimerService timerService;
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private Future<?> future;
+    private boolean isAfterReset = true;
 
 
     public CountdownTimer(Context context){
         this.context = context;
-        timerTaskRunner = new TimerTaskRunner();
     }
 
 
     public void setAndUpdateView(MainView view, TimerService timerService){
         this.view = view;
         this.timerService = timerService;
-        setCurrentCountdownValue(currentSeconds);
+        setCurrentCountdownValue(getSecondsRemaining());
         view.setTimerRunningStatus(currentState);
     }
 
@@ -47,10 +52,15 @@ public class CountdownTimer  {
 
 
     public void resetTime(){
-        currentSeconds = timerStartingValue;
+        setMillisecondsRemaining();
+        isAfterReset = true;
         if(view != null) {
             view.setCurrentCountdownValue(getMinutes(), getSeconds(), false);
             resetStartButton();
+        }
+        if(currentState == TimerState.RUNNING){
+            cancelCountdownTask();
+            startTimer();
         }
     }
 
@@ -59,6 +69,11 @@ public class CountdownTimer  {
         if(!isTimerRunning && view != null){
             view.enableAndShowStartButton();
         }
+    }
+
+
+    private void setMillisecondsRemaining(){
+        millisecondsRemaining = timerStartingValue * 1000;
     }
 
 
@@ -85,7 +100,7 @@ public class CountdownTimer  {
 
     private void updateCurrentSecondsIfTimerIsStopped(int minutes, int seconds){
         if(currentState == TimerState.STOPPED){
-            currentSeconds = timerStartingValue;
+            setMillisecondsRemaining();
             if(view != null) {
                 view.resetCurrentCountdownValue(minutes, seconds);
             }
@@ -94,25 +109,17 @@ public class CountdownTimer  {
 
 
     private int getMinutes(){
-        return currentSeconds / 60;
+        return getSeconds() / 60;
+    }
+
+
+    private int getSecondsRemaining(){
+        return getSeconds() % 60;
     }
 
 
     private int getSeconds(){
-        return currentSeconds % 60;
-    }
-
-
-    public void startTimer() {
-        currentState = TimerState.RUNNING;
-        isTimerRunning = true;
-        timerTaskRunner.startTimer(this);
-        if(view == null){
-            return;
-        }
-        view.showPauseButton();
-        view.showResetButton();
-        view.changeCountdownColorOff();
+        return millisecondsRemaining / 1000;
     }
 
 
@@ -125,10 +132,30 @@ public class CountdownTimer  {
     }
 
 
+    private void startTimer() {
+        initiateTask();
+        currentState = TimerState.RUNNING;
+        isTimerRunning = true;
+        if(view == null){
+            return;
+        }
+        view.showPauseButton();
+        view.showResetButton();
+        view.changeCountdownColorOff();
+    }
+
+
+    private void initiateTask(){
+        long initialDelay = isAfterReset ? 1000 : 0;
+        isAfterReset = false;
+        future = scheduledExecutorService.scheduleWithFixedDelay(this::countDownAHundredMilliseconds, initialDelay, 100, TimeUnit.MILLISECONDS);
+    }
+
+
     private void pauseTimer() {
         currentState = TimerState.PAUSED;
         isTimerRunning = false;
-        timerTaskRunner.stopTimer();
+        cancelCountdownTask();
         if(view == null){
             return;
         }
@@ -140,12 +167,19 @@ public class CountdownTimer  {
     private void stopTimer(){
         currentState = TimerState.STOPPED;
         isTimerRunning = false;
-        timerTaskRunner.stopTimer();
+        cancelCountdownTask();
         if(view == null){
             return;
         }
         view.enableSetButton();
         view.enableAndShowStartButton();
+    }
+
+
+    private void cancelCountdownTask(){
+        if(!future.isCancelled()){
+            future.cancel(true);
+        }
     }
 
 
@@ -166,10 +200,10 @@ public class CountdownTimer  {
     }
 
 
-    public void countDownOneSecond(){
-        currentSeconds = currentSeconds <= 0 ? 0 : currentSeconds -1;
-        setCurrentCountdownValue(currentSeconds);
-        if(currentSeconds == 0){
+    public void countDownAHundredMilliseconds(){
+        millisecondsRemaining = Math.max(millisecondsRemaining - 100, 0);
+        setCurrentCountdownValue(millisecondsRemaining / 1000);
+        if(millisecondsRemaining == 0){
             onCountdownComplete();
             stopTimer();
             playSoundOnTimesUp();
