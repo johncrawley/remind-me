@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private TextView timesUpMessageText;
     private Button setButton, startStopButton;
     private MainViewModel viewModel;
-    private boolean isInFront;
     private Animation displayTimesUpTextAnimation;
     private TimerService timerService;
 
@@ -98,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void onResume(){
-        isInFront = true;
         super.onResume();
     }
 
@@ -106,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void onPause() {
         super.onPause();
-        isInFront = false;
     }
 
 

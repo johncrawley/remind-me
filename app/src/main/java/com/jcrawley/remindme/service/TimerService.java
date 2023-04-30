@@ -9,7 +9,6 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.jcrawley.remindme.CountdownTimer;
-import com.jcrawley.remindme.MainActivity;
 import com.jcrawley.remindme.MainView;
 import com.jcrawley.remindme.NotificationHelper;
 import com.jcrawley.remindme.Settings;
@@ -98,11 +97,6 @@ public class TimerService extends Service {
     }
 
 
-    public void notifyViewOfTimesUp(){
-
-    }
-
-
     public void setView(MainView view){
         countdownTimer.setAndUpdateView(view, this);
     }
@@ -118,25 +112,13 @@ public class TimerService extends Service {
     }
 
 
-
-    public void setTime(int minutes, int seconds){
-        countdownTimer.setTime(minutes, seconds);
-    }
-
-
     public void setTime(String minutesStr, String secondsStr){
-        log("entered setTime()");
         if (countdownTimer.isInitialized()) {
             return;
         }
         int minutes = getIntFor(minutesStr);
         int seconds = getIntFor(secondsStr);
         countdownTimer.setTime(minutes, seconds);
-    }
-
-
-    private void log(String msg){
-        System.out.println("^^^ TimerService: " + msg);
     }
 
 

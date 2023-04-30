@@ -47,9 +47,6 @@ public class CountdownTimer  {
 
 
     public void resetTime(){
-        if(isTimerRunning){
-            stopTimer();
-        }
         currentSeconds = timerStartingValue;
         if(view != null) {
             view.setCurrentCountdownValue(getMinutes(), getSeconds(), false);
@@ -82,9 +79,16 @@ public class CountdownTimer  {
     public void setTime(int minutes, int seconds){
         isInitialized = true;
         timerStartingValue = (minutes * SECONDS_PER_MINUTE) + seconds;
-        currentSeconds = timerStartingValue;
-        if(view != null) {
-            view.resetCurrentCountdownValue(minutes, seconds);
+        updateCurrentSecondsIfTimerIsStopped(minutes, seconds);
+    }
+
+
+    private void updateCurrentSecondsIfTimerIsStopped(int minutes, int seconds){
+        if(currentState == TimerState.STOPPED){
+            currentSeconds = timerStartingValue;
+            if(view != null) {
+                view.resetCurrentCountdownValue(minutes, seconds);
+            }
         }
     }
 
@@ -130,7 +134,6 @@ public class CountdownTimer  {
         }
         view.showResumeButton();
         view.enableSetButton();
-        view.changeCountdownColorOff();
     }
 
 
@@ -142,7 +145,6 @@ public class CountdownTimer  {
             return;
         }
         view.enableSetButton();
-        view.changeCountdownColorOff();
         view.enableAndShowStartButton();
     }
 
@@ -157,11 +159,10 @@ public class CountdownTimer  {
     }
 
 
-
     private boolean isCritical(int currentTimeLeft){
-        return currentTimeLeft < 5
-                || (timerStartingValue > 60 && currentTimeLeft < 15)
-                || (timerStartingValue > 600 && currentTimeLeft < 30);
+        return currentTimeLeft <= 5
+                || (timerStartingValue >= 60 && currentTimeLeft <= 15)
+                || (timerStartingValue >= 600 && currentTimeLeft <= 30);
     }
 
 
@@ -183,6 +184,7 @@ public class CountdownTimer  {
         return seconds % SECONDS_PER_MINUTE;
     }
 
+
     private int getClockMinutes(int seconds){
         return  seconds / SECONDS_PER_MINUTE;
     }
@@ -192,12 +194,11 @@ public class CountdownTimer  {
         if(view == null){
             return;
         }
-        timerService.notifyViewOfTimesUp();
-
         view.notifyTimesUp(timerService.getTimesUpMessage());
         view.showStartButton();
         view.disableStartButton();
     }
+
 
     private String getStr(int id){
         return context.getString(id);
