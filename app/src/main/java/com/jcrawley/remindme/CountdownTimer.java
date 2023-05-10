@@ -61,7 +61,9 @@ public class CountdownTimer  {
         if(currentState == TimerState.RUNNING){
             cancelCountdownTask();
             startTimer();
+            return;
         }
+        notificationHelper.updateNotification(getStr(R.string.notification_state_ready), getCurrentTime());
     }
 
 
@@ -183,13 +185,14 @@ public class CountdownTimer  {
     }
 
 
-    public void setCurrentCountdownValue(int currentValue) {
-        int minutes = getClockMinutes(currentValue);
-        int seconds = getClockSeconds(currentValue);
+    public void setCurrentCountdownValue(int millisecondsRemaining) {
+        int totalSecondsLeft = millisecondsRemaining / 1000;
+        int minutes = getClockMinutes(totalSecondsLeft);
+        int seconds = getClockSeconds(totalSecondsLeft);
         if(view == null){
             return;
         }
-        view.setCurrentCountdownValue(minutes, seconds, isCritical(currentValue));
+        view.setCurrentCountdownValue(minutes, seconds, isCritical(totalSecondsLeft));
     }
 
 
@@ -202,15 +205,27 @@ public class CountdownTimer  {
 
     public void countDownAHundredMilliseconds(){
         millisecondsRemaining = Math.max(millisecondsRemaining - 100, 0);
-        setCurrentCountdownValue(millisecondsRemaining / 1000);
-        if(millisecondsRemaining == 0){
-            onCountdownComplete();
-            stopTimer();
-            playSoundOnTimesUp();
-            notificationHelper.sendTimesUpNotification();
+        setCurrentCountdownValue(millisecondsRemaining);
+        updateCountdownNotification();
+        handleTimesUp();
+    }
+
+
+    private void updateCountdownNotification(){
+        if(millisecondsRemaining >= 1000) {
+            notificationHelper.updateCountdown(getStr(R.string.notification_state_counting_down), getCurrentTime());
+        }
+    }
+
+
+    private void handleTimesUp(){
+        if(millisecondsRemaining > 0) {
             return;
         }
-        notificationHelper.updateNotification(getStr(R.string.menu_button_counting_down_message), getCurrentTime());
+        onCountdownComplete();
+        stopTimer();
+        playSoundOnTimesUp();
+        notificationHelper.sendTimesUpNotification();
     }
 
 

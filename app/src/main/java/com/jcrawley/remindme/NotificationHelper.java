@@ -53,6 +53,7 @@ public class NotificationHelper {
 
 
     private Notification buildNotification(String status, String timeStr, boolean isTimeUp){
+        log("Entered buildNotification() : " + status + " timeStr ");
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(status)
                 .setContentText(timeStr)
@@ -83,8 +84,24 @@ public class NotificationHelper {
         notificationManager.notify(NOTIFICATION_ID, createNotification(status, timeStr));
     }
 
+    private int countdownCounter;
+
+
+    public void updateCountdown(String status, String timeStr) {
+        countdownCounter++;
+        if(countdownCounter % 10 == 0){
+            notificationManager.notify(NOTIFICATION_ID, createNotification(status, timeStr));
+            countdownCounter = 0;
+        }
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ NotificationHelper: " + msg);
+    }
+
 
     public void sendTimesUpNotification(){
+        log("Entered sendTimesUpNotification()");
         notificationManager.notify(NOTIFICATION_ID,
                 buildNotification(context.getString(R.string.notification_times_up_message), timerService.getTimesUpMessage(), true));
     }
