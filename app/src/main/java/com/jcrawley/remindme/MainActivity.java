@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
             timerService = binder.getService();
             timerService.setView(MainActivity.this);
             timerService.setTime(viewModel.initialMinutes, viewModel.initialSeconds);
-            log("Service connected");
+            log("Service connected, time set from viewModel: " + viewModel.initialMinutes + ":" + viewModel.initialSeconds);
         }
         @Override public void onServiceDisconnected(ComponentName arg0) {}
     };
@@ -176,6 +176,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
+    public void resetCurrentCountdownValue(int currentMinutes, int currentSeconds) {
+        setCurrentCountdownValue(currentMinutes, currentSeconds, false);
+    }
+
+
     public void setCurrentCountdownValue(int currentMinutes, int currentSeconds, boolean isCritical) {
         runOnUiThread(() -> {
             String text = getTimeText(currentMinutes) + " : " + getTimeText(currentSeconds);
@@ -183,11 +188,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
             viewModel.isTimeLeftCritical = isCritical;
             updateTimerTextColor();
         });
-    }
-
-
-    public void resetCurrentCountdownValue(int currentMinutes, int currentSeconds) {
-        setCurrentCountdownValue(currentMinutes, currentSeconds, false);
     }
 
 
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 enableSetButton();
                 showResetButton();
                 break;
-            case STOPPED:
+            case READY:
                 showStartButton();
                 showResetButton();
                 break;

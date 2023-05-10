@@ -14,11 +14,10 @@ public class CountdownTimer  {
 
     private MainView view;
     private final int SECONDS_PER_MINUTE = 60;
-    private boolean isTimerRunning = false;
     private int timerStartingValue;
     private int millisecondsRemaining;
-    public enum TimerState { STOPPED, RUNNING, PAUSED }
-    private TimerState currentState = TimerState.STOPPED;
+    public enum TimerState {READY, RUNNING, PAUSED }
+    private TimerState currentState = TimerState.READY;
     private NotificationHelper notificationHelper;
     private final Context context;
     private boolean isInitialized;
@@ -36,7 +35,7 @@ public class CountdownTimer  {
     public void setAndUpdateView(MainView view, TimerService timerService){
         this.view = view;
         this.timerService = timerService;
-        setCurrentCountdownValue(getSecondsRemaining());
+        setCurrentCountdownValueOnMainView();
         view.setTimerRunningStatus(currentState);
     }
 
@@ -55,7 +54,7 @@ public class CountdownTimer  {
         setMillisecondsRemaining();
         isAfterReset = true;
         if(view != null) {
-            view.setCurrentCountdownValue(getMinutes(), getSeconds(), false);
+            view.setCurrentCountdownValue(getMinutes(), getSecondsRemaining(), false);
             resetStartButton();
         }
         if(currentState == TimerState.RUNNING){
@@ -63,12 +62,13 @@ public class CountdownTimer  {
             startTimer();
             return;
         }
-        notificationHelper.updateNotification(getStr(R.string.notification_state_ready), getCurrentTime());
+        currentState = TimerState.READY;
+        updateNotification();
     }
 
 
     public void resetStartButton(){
-        if(!isTimerRunning && view != null){
+        if(currentState != TimerState.RUNNING && view != null){
             view.enableAndShowStartButton();
         }
     }
@@ -81,8 +81,7 @@ public class CountdownTimer  {
 
     public String getCurrentTime(){
         int minutes = getMinutes();
-        int seconds = getSeconds();
-
+        int seconds = getSecondsRemaining();
         return getClockStringFor(minutes) + ":" + getClockStringFor(seconds);
     }
 
@@ -101,10 +100,11 @@ public class CountdownTimer  {
 
 
     private void updateCurrentSecondsIfTimerIsStopped(int minutes, int seconds){
-        if(currentState == TimerState.STOPPED){
+        if(currentState == TimerState.READY){
             setMillisecondsRemaining();
             if(view != null) {
                 view.resetCurrentCountdownValue(minutes, seconds);
+                updateNotification();
             }
         }
     }
@@ -126,7 +126,7 @@ public class CountdownTimer  {
 
 
     public void startStop(){
-        if(isTimerRunning){
+        if(currentState == TimerState.RUNNING){
             pauseTimer();
             return;
         }
@@ -137,7 +137,6 @@ public class CountdownTimer  {
     private void startTimer() {
         initiateTask();
         currentState = TimerState.RUNNING;
-        isTimerRunning = true;
         if(view == null){
             return;
         }
@@ -156,19 +155,31 @@ public class CountdownTimer  {
 
     private void pauseTimer() {
         currentState = TimerState.PAUSED;
-        isTimerRunning = false;
         cancelCountdownTask();
         if(view == null){
             return;
         }
         view.showResumeButton();
         view.enableSetButton();
+        updateNotification();
+    }
+
+
+    private void updateNotification(){
+       notificationHelper.updateNotification(getStatusStr(), getCurrentTime());
+    }
+
+
+    public String getStatusStr(){
+        int statusResId = currentState == TimerState.READY ? R.string.notification_state_ready
+                : currentState == TimerState.PAUSED ? R.string.notification_state_paused
+                : R.string.notification_state_counting_down;
+        return getStr(statusResId);
     }
 
 
     private void stopTimer(){
-        currentState = TimerState.STOPPED;
-        isTimerRunning = false;
+        currentState = TimerState.READY;
         cancelCountdownTask();
         if(view == null){
             return;
@@ -185,7 +196,7 @@ public class CountdownTimer  {
     }
 
 
-    public void setCurrentCountdownValue(int millisecondsRemaining) {
+    public void setCurrentCountdownValueOnMainView() {
         int totalSecondsLeft = millisecondsRemaining / 1000;
         int minutes = getClockMinutes(totalSecondsLeft);
         int seconds = getClockSeconds(totalSecondsLeft);
@@ -205,7 +216,7 @@ public class CountdownTimer  {
 
     public void countDownAHundredMilliseconds(){
         millisecondsRemaining = Math.max(millisecondsRemaining - 100, 0);
-        setCurrentCountdownValue(millisecondsRemaining);
+        setCurrentCountdownValueOnMainView();
         updateCountdownNotification();
         handleTimesUp();
     }

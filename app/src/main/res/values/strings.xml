@@ -23,4 +23,5 @@
     <string name="menu_button_configure">Configure</string>
     <string name="notification_state_counting_down">Counting Down</string>
     <string name="notification_state_ready">Ready</string>
+    <string name="notification_state_paused">Paused</string>
 </resources>
