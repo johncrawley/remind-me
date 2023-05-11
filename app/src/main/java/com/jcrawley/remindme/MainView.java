@@ -5,6 +5,7 @@ public interface MainView {
         void showPauseButton();
         void showResetButton();
         void setCurrentCountdownValue(int minutes, int seconds, boolean isCritical);
+        void setCurrentCountdownValue(String currentTimeText, boolean isCritical);
         void resetCurrentCountdownValue(int minutes, int seconds);
         void notifyTimesUp(String timesUpMessage);
         void showStartButton();
@@ -13,5 +14,8 @@ public interface MainView {
         void showResumeButton();
         void enableSetButton();
         void changeCountdownColorOff();
-        void setTimerRunningStatus(CountdownTimer.TimerState timerState);
+
+        void updateForReadyState();
+        void updateForRunningState();
+        void updateForPausedState();
 }

@@ -69,7 +69,7 @@ public class TimerService extends Service {
 
 
     private Notification createNotificationForCurrentTime(String status){
-        return notificationHelper.createNotification(status, countdownTimer.getCurrentTime());
+        return notificationHelper.createNotification(status, countdownTimer.getCurrentTimeText());
     }
 
 

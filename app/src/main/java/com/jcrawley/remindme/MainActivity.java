@@ -191,6 +191,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
+    @Override
+    public void setCurrentCountdownValue(String currentTimeText, boolean isCritical) {
+        runOnUiThread(() -> {
+            currentCountdownText.setText(currentTimeText);
+            viewModel.isTimeLeftCritical = isCritical;
+            updateTimerTextColor();
+        });
+    }
+
+
     public void enableAndShowStartButton() {
         this.startStopButton.setEnabled(true);
         this.startStopButton.setText(getResources().getString(R.string.button_start_label));
@@ -209,22 +219,25 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 
     @Override
-    public void setTimerRunningStatus(CountdownTimer.TimerState timerState) {
-        switch (timerState){
-            case RUNNING:
-                showPauseButton();
-                enableSetButton();
-                showResetButton();
-                break;
-            case READY:
-                showStartButton();
-                showResetButton();
-                break;
-            case PAUSED:
-                showResumeButton();
-                enableSetButton();
-                showResetButton();
-        }
+    public void updateForRunningState(){
+        showPauseButton();
+        enableSetButton();
+        showResetButton();
+    }
+
+
+    @Override
+    public void updateForReadyState(){
+        showStartButton();
+        showResetButton();
+    }
+
+
+    @Override
+    public void updateForPausedState(){
+        showResumeButton();
+        enableSetButton();
+        showResetButton();
     }
 
 

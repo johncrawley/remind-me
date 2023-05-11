@@ -13,10 +13,9 @@ import java.util.concurrent.TimeUnit;
 public class CountdownTimer  {
 
     private MainView view;
-    private final int SECONDS_PER_MINUTE = 60;
     private int timerStartingValue;
     private int millisecondsRemaining;
-    public enum TimerState {READY, RUNNING, PAUSED }
+    private enum TimerState {READY, RUNNING, PAUSED }
     private TimerState currentState = TimerState.READY;
     private NotificationHelper notificationHelper;
     private final Context context;
@@ -25,6 +24,7 @@ public class CountdownTimer  {
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Future<?> future;
     private boolean isAfterReset = true;
+    private String currentTimeText = "";
 
 
     public CountdownTimer(Context context){
@@ -35,8 +35,13 @@ public class CountdownTimer  {
     public void setAndUpdateView(MainView view, TimerService timerService){
         this.view = view;
         this.timerService = timerService;
+        setCurrentTimeText();
         setCurrentCountdownValueOnMainView();
-        view.setTimerRunningStatus(currentState);
+        switch (currentState){
+            case READY: view.updateForReadyState(); break;
+            case RUNNING: view.updateForRunningState(); break;
+            case PAUSED: view.updateForPausedState();
+        }
     }
 
 
@@ -52,9 +57,10 @@ public class CountdownTimer  {
 
     public void resetTime(){
         setMillisecondsRemaining();
+        setCurrentTimeText();
         isAfterReset = true;
         if(view != null) {
-            view.setCurrentCountdownValue(getMinutes(), getSecondsRemaining(), false);
+            view.setCurrentCountdownValue(getCurrentTimeText(), false);
             resetStartButton();
         }
         if(currentState == TimerState.RUNNING){
@@ -67,7 +73,27 @@ public class CountdownTimer  {
     }
 
 
-    public void resetStartButton(){
+    public String getCurrentTimeText(){
+        return currentTimeText;
+    }
+
+
+    public void setCurrentTimeText(){
+        int minutes = getMinutesPart();
+        int seconds = getSecondsPart();
+        currentTimeText = getClockStringFor(minutes) + ":" + getClockStringFor(seconds);
+    }
+
+
+    public void setTime(int minutes, int seconds){
+        isInitialized = true;
+        int SECONDS_PER_MINUTE = 60;
+        timerStartingValue = (minutes * SECONDS_PER_MINUTE) + seconds;
+        updateCurrentSecondsIfTimerIsStopped(minutes, seconds);
+    }
+
+
+    private void resetStartButton(){
         if(currentState != TimerState.RUNNING && view != null){
             view.enableAndShowStartButton();
         }
@@ -76,26 +102,6 @@ public class CountdownTimer  {
 
     private void setMillisecondsRemaining(){
         millisecondsRemaining = timerStartingValue * 1000;
-    }
-
-
-    public String getCurrentTime(){
-        int minutes = getMinutes();
-        int seconds = getSecondsRemaining();
-        return getClockStringFor(minutes) + ":" + getClockStringFor(seconds);
-    }
-
-
-    private String getClockStringFor(int number){
-        String numberStr = String.valueOf(number);
-        return number < 10 ? "0" + numberStr : numberStr;
-    }
-
-
-    public void setTime(int minutes, int seconds){
-        isInitialized = true;
-        timerStartingValue = (minutes * SECONDS_PER_MINUTE) + seconds;
-        updateCurrentSecondsIfTimerIsStopped(minutes, seconds);
     }
 
 
@@ -110,17 +116,17 @@ public class CountdownTimer  {
     }
 
 
-    private int getMinutes(){
-        return getSeconds() / 60;
+    private int getMinutesPart(){
+        return getAllSeconds() / 60;
     }
 
 
-    private int getSecondsRemaining(){
-        return getSeconds() % 60;
+    private int getSecondsPart(){
+        return getAllSeconds() % 60;
     }
 
 
-    private int getSeconds(){
+    private int getAllSeconds(){
         return millisecondsRemaining / 1000;
     }
 
@@ -166,11 +172,11 @@ public class CountdownTimer  {
 
 
     private void updateNotification(){
-       notificationHelper.updateNotification(getStatusStr(), getCurrentTime());
+       notificationHelper.updateNotification(getStatusStr(), getCurrentTimeText());
     }
 
 
-    public String getStatusStr(){
+    private String getStatusStr(){
         int statusResId = currentState == TimerState.READY ? R.string.notification_state_ready
                 : currentState == TimerState.PAUSED ? R.string.notification_state_paused
                 : R.string.notification_state_counting_down;
@@ -196,17 +202,6 @@ public class CountdownTimer  {
     }
 
 
-    public void setCurrentCountdownValueOnMainView() {
-        int totalSecondsLeft = millisecondsRemaining / 1000;
-        int minutes = getClockMinutes(totalSecondsLeft);
-        int seconds = getClockSeconds(totalSecondsLeft);
-        if(view == null){
-            return;
-        }
-        view.setCurrentCountdownValue(minutes, seconds, isCritical(totalSecondsLeft));
-    }
-
-
     private boolean isCritical(int currentTimeLeft){
         return currentTimeLeft <= 5
                 || (timerStartingValue >= 60 && currentTimeLeft <= 15)
@@ -214,18 +209,38 @@ public class CountdownTimer  {
     }
 
 
-    public void countDownAHundredMilliseconds(){
-        millisecondsRemaining = Math.max(millisecondsRemaining - 100, 0);
+    private void countDownAHundredMilliseconds(){
+        decrementMillisecondsRemaining();
+        setCurrentTimeText();
         setCurrentCountdownValueOnMainView();
         updateCountdownNotification();
         handleTimesUp();
     }
 
 
+    private void decrementMillisecondsRemaining(){
+        millisecondsRemaining = Math.max(millisecondsRemaining - 100, 0);
+    }
+
+
+    private void setCurrentCountdownValueOnMainView() {
+        if(view == null){
+            return;
+        }
+        view.setCurrentCountdownValue(getCurrentTimeText(), isCritical(getAllSeconds()));
+    }
+
+
     private void updateCountdownNotification(){
         if(millisecondsRemaining >= 1000) {
-            notificationHelper.updateCountdown(getStr(R.string.notification_state_counting_down), getCurrentTime());
+            notificationHelper.updateCountdown(getStr(R.string.notification_state_counting_down), getCurrentTimeText());
         }
+    }
+
+
+    private String getClockStringFor(int number){
+        String numberStr = String.valueOf(number);
+        return number < 10 ? "0" + numberStr : numberStr;
     }
 
 
@@ -237,16 +252,6 @@ public class CountdownTimer  {
         stopTimer();
         playSoundOnTimesUp();
         notificationHelper.sendTimesUpNotification();
-    }
-
-
-    private int getClockSeconds(int seconds){
-        return seconds % SECONDS_PER_MINUTE;
-    }
-
-
-    private int getClockMinutes(int seconds){
-        return  seconds / SECONDS_PER_MINUTE;
     }
 
 
