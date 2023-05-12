@@ -21,18 +21,19 @@ public class NotificationHelper {
     private PendingIntent pendingIntent;
     final static String NOTIFICATION_CHANNEL_ID = "com.jcrawley.musicplayer-notification";
     private NotificationManager notificationManager;
-    private TimerService timerService;
+   // private TimerService timerService;
 
     public NotificationHelper(Context context) {
         this.context = context;
+        init();
     }
 
 
-    public void init(TimerService timerService){
-        this.timerService = timerService;
+    public void init(){
         setupNotificationChannel();
         setupNotificationClickForActivity();
     }
+
 
     private void setupNotificationChannel(){
         notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -95,9 +96,9 @@ public class NotificationHelper {
     }
 
 
-    public void sendTimesUpNotification(){
+    public void sendTimesUpNotification(String message){
         notificationManager.notify(NOTIFICATION_ID,
-                buildNotification(context.getString(R.string.notification_times_up_message), timerService.getTimesUpMessage(), true));
+                buildNotification(context.getString(R.string.notification_times_up_message), message, true));
     }
 
 

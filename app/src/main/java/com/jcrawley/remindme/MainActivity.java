@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private TextView currentCountdownText;
     private TextView timesUpMessageText;
-    private Button setButton, startStopButton;
+    private Button resetButton, startStopButton;
     private MainViewModel viewModel;
     private Animation displayTimesUpTextAnimation;
     private TimerService timerService;
@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
             TimerService.LocalBinder binder = (TimerService.LocalBinder) service;
             timerService = binder.getService();
             timerService.setView(MainActivity.this);
-            timerService.setTime(viewModel.initialMinutes, viewModel.initialSeconds);
-            log("Service connected, time set from viewModel: " + viewModel.initialMinutes + ":" + viewModel.initialSeconds);
         }
         @Override public void onServiceDisconnected(ComponentName arg0) {}
     };
@@ -84,11 +82,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
-    private void log(String msg){
-        System.out.println("^^^ MainActivity: " + msg);
-    }
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -126,8 +119,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         timesUpMessageText = findViewById(R.id.timesUpMessageText);
         startStopButton = findViewById(R.id.startStopButton);
         startStopButton.setOnClickListener((View v) -> timerService.startStop());
-        setButton = findViewById(R.id.setButton);
-        setButton.setOnClickListener((View v)->{
+        resetButton = findViewById(R.id.resetButton);
+        resetButton.setOnClickListener((View v)->{
             timerService.resetTime();
             hideTimesUpText();
         });
@@ -147,9 +140,32 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
+    @Override
+    public void notifyTimerStarted(){
+        showPauseButton();
+        showResetButton();
+        changeCountdownColorOff();
+    }
+
+
+    @Override
+    public void notifyPaused(){
+        showResumeButton();
+    }
+
+
+    @Override
     public void notifyTimesUp(String timesUpMessage){
         showTimesUpText(timesUpMessage);
-        //playSound();
+        showStartButton();
+        disableStartButton();
+    }
+
+
+    @Override
+    public void notifyResetWhenTimerStopped() {
+        this.startStopButton.setEnabled(true);
+        this.startStopButton.setText(getResources().getString(R.string.button_start_label));
     }
 
 
@@ -176,18 +192,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
-    public void resetCurrentCountdownValue(int currentMinutes, int currentSeconds) {
-        setCurrentCountdownValue(currentMinutes, currentSeconds, false);
-    }
-
-
-    public void setCurrentCountdownValue(int currentMinutes, int currentSeconds, boolean isCritical) {
-        runOnUiThread(() -> {
-            String text = getTimeText(currentMinutes) + " : " + getTimeText(currentSeconds);
-            currentCountdownText.setText(text);
-            viewModel.isTimeLeftCritical = isCritical;
-            updateTimerTextColor();
-        });
+    public void resetCurrentCountdownValue(String timeStr) {
+        setCurrentCountdownValue(timeStr, false);
     }
 
 
@@ -201,27 +207,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
-    public void enableAndShowStartButton() {
-        this.startStopButton.setEnabled(true);
-        this.startStopButton.setText(getResources().getString(R.string.button_start_label));
-    }
-
-
-    public void updateTimerTextColor(){
-        int colorId = viewModel.isTimeLeftCritical ? R.color.dark_timer_text_critical : R.color.dark_timer_text_normal;
-        currentCountdownText.setTextColor(getResources().getColor(colorId, null));
-    }
-
-
-    public void changeCountdownColorOff() {
-        setCountdownTextColor(R.color.colorTimerTextOff);
-    }
-
-
     @Override
     public void updateForRunningState(){
         showPauseButton();
-        enableSetButton();
         showResetButton();
     }
 
@@ -236,43 +224,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void updateForPausedState(){
         showResumeButton();
-        enableSetButton();
         showResetButton();
-    }
-
-
-    public void enableSetButton() {
-        setButton.setEnabled(true);
-    }
-
-
-    public void disableStartButton() {
-        runOnUiThread(() -> startStopButton.setEnabled(false) );
-    }
-
-
-    public void showPauseButton(){
-        startStopButton.setText(getString(R.string.button_pause_label));
-    }
-
-
-    public void showResetButton(){
-        setButton.setText(getString(R.string.button_reset_label));
-    }
-
-
-    public void showStartButton(){
-        startStopButton.setText(getString(R.string.button_start_label));
-    }
-
-
-    public void showResumeButton(){
-        startStopButton.setText(getString(R.string.button_resume_label));
-    }
-
-
-    private void setCountdownTextColor(int colorId){
-        currentCountdownText.setTextColor(getResources().getColor(colorId, null));
     }
 
 
@@ -283,11 +235,44 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
-    private String getTimeText(int timeValue){
-        return timeValue > 9 ?
-                "" + timeValue
-                : "0" + timeValue;
+    private void updateTimerTextColor(){
+        int colorId = viewModel.isTimeLeftCritical ? R.color.dark_timer_text_critical : R.color.dark_timer_text_normal;
+        currentCountdownText.setTextColor(getResources().getColor(colorId, null));
     }
 
+
+    private void changeCountdownColorOff() {
+        setCountdownTextColor(R.color.colorTimerTextOff);
+    }
+
+
+    private void disableStartButton() {
+        runOnUiThread(() -> startStopButton.setEnabled(false) );
+    }
+
+
+    private void showPauseButton(){
+        startStopButton.setText(getString(R.string.button_pause_label));
+    }
+
+
+    private void showResetButton(){
+        resetButton.setText(getString(R.string.button_reset_label));
+    }
+
+
+    private void showStartButton(){
+        startStopButton.setText(getString(R.string.button_start_label));
+    }
+
+
+    private void showResumeButton(){
+        startStopButton.setText(getString(R.string.button_resume_label));
+    }
+
+
+    private void setCountdownTextColor(int colorId){
+        currentCountdownText.setTextColor(getResources().getColor(colorId, null));
+    }
 
 }

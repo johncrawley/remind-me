@@ -20,7 +20,7 @@ public class TimerPreferences {
         SharedPreferences prefs = context.getSharedPreferences(PREFERENCES_NAME,0);
         int seconds = prefs.getInt(PREF_NAME_SECONDS, 0);
         int minutes = prefs.getInt(PREF_NAME_MINUTES, 5);
-        String message = prefs.getString(PREF_NAME_TIMES_UP_MESSAGE, "Times UP!");
+        String message = prefs.getString(PREF_NAME_TIMES_UP_MESSAGE, "Times Up!");
         return new Settings(seconds, minutes, message);
     }
 

@@ -15,7 +15,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/colorTimerTextOff"
         android:textSize="@dimen/timer_text_size"
-        app:layout_constraintBottom_toTopOf="@id/setButton"
+        app:layout_constraintBottom_toTopOf="@id/resetButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -38,10 +38,10 @@
 
 
     <Button
-        android:id="@+id/setButton"
+        android:id="@+id/resetButton"
         android:layout_width="150dp"
         android:layout_height="90dp"
-        android:text="@string/set_button"
+        android:text="@string/button_reset_label"
         android:layout_margin="@dimen/button_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/startStopButton"
@@ -55,10 +55,10 @@
         android:layout_height="90dp"
         android:layout_margin="@dimen/button_margin"
         android:text="@string/button_start_label"
-        app:layout_constraintBottom_toBottomOf="@+id/setButton"
+        app:layout_constraintBottom_toBottomOf="@+id/resetButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/setButton"
-        app:layout_constraintTop_toTopOf="@+id/setButton" />
+        app:layout_constraintStart_toEndOf="@+id/resetButton"
+        app:layout_constraintTop_toTopOf="@+id/resetButton" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
