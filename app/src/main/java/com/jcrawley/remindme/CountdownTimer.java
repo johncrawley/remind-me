@@ -2,7 +2,7 @@ package com.jcrawley.remindme;
 
 import android.app.Notification;
 import android.content.Context;
-import android.media.MediaPlayer;
+import com.jcrawley.remindme.service.SoundPlayer;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -12,21 +12,26 @@ import java.util.concurrent.TimeUnit;
 public class CountdownTimer  {
 
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private final SoundPlayer soundPlayer;
     private final NotificationHelper notificationHelper;
     private final Context context;
+    private final int SECONDS_PER_MINUTE = 60;
+    private final int MILLISECONDS_PER_SECOND = 1000;
+    private final int COUNTDOWN_INTERVAL = 100;
     private MainView view;
     private int timerStartingValue;
     private int millisecondsRemaining;
     private enum TimerState {READY, RUNNING, PAUSED }
     private TimerState currentState = TimerState.READY;
     private Future<?> future;
-    private boolean isAfterReset = true;
     private String currentTimeText = "";
     private String timesUpMessage = "";
+    private int countdownCounter;
 
 
     public CountdownTimer(Context context){
         this.context = context;
+        soundPlayer = new SoundPlayer(context);
         notificationHelper = new NotificationHelper(context);
     }
 
@@ -59,7 +64,6 @@ public class CountdownTimer  {
 
     public void resetTime(){
         setMillisecondsRemaining();
-        isAfterReset = true;
         if(view != null) {
             view.setCurrentCountdownValue(getCurrentTimeText(), false);
             resetStartButton();
@@ -75,7 +79,6 @@ public class CountdownTimer  {
 
 
     public void setTime(int minutes, int seconds, String message){
-        int SECONDS_PER_MINUTE = 60;
         timerStartingValue = (minutes * SECONDS_PER_MINUTE) + seconds;
         updateCurrentSecondsIfTimerIsStopped();
         timesUpMessage = message;
@@ -102,7 +105,7 @@ public class CountdownTimer  {
 
 
     private void setMillisecondsRemaining(){
-        millisecondsRemaining = timerStartingValue * 1000;
+        millisecondsRemaining = timerStartingValue * MILLISECONDS_PER_SECOND;
         updateCurrentTimeText();
     }
 
@@ -125,17 +128,17 @@ public class CountdownTimer  {
     }
 
     private int getMinutesPart(){
-        return getAllSeconds() / 60;
+        return getAllSeconds() / SECONDS_PER_MINUTE;
     }
 
 
     private int getSecondsPart(){
-        return getAllSeconds() % 60;
+        return getAllSeconds() % SECONDS_PER_MINUTE;
     }
 
 
     private int getAllSeconds(){
-        return millisecondsRemaining / 1000;
+        return millisecondsRemaining / MILLISECONDS_PER_SECOND;
     }
 
 
@@ -150,9 +153,7 @@ public class CountdownTimer  {
 
 
     private void initiateTask(){
-        long initialDelay = isAfterReset ? 1000 : 0;
-        isAfterReset = false;
-        future = scheduledExecutorService.scheduleWithFixedDelay(this::countDownAHundredMilliseconds, initialDelay, 100, TimeUnit.MILLISECONDS);
+        future = scheduledExecutorService.scheduleWithFixedDelay(this::countdown, 0, 100, TimeUnit.MILLISECONDS);
     }
 
 
@@ -194,17 +195,21 @@ public class CountdownTimer  {
     }
 
 
-    private void countDownAHundredMilliseconds(){
+    private void countdown(){
         decrementMillisecondsRemaining();
-        updateCurrentTimeText();
-        setCurrentCountdownValueOnMainView();
-        updateCountdownNotification();
-        handleTimesUp();
+        countdownCounter++;
+        if(countdownCounter >= 10){
+            countdownCounter = 0;
+            updateCurrentTimeText();
+            setCurrentCountdownValueOnMainView();
+            updateCountdownNotification();
+            handleTimesUp();
+        }
     }
 
 
     private void decrementMillisecondsRemaining(){
-        millisecondsRemaining = Math.max(millisecondsRemaining - 100, 0);
+        millisecondsRemaining = Math.max(millisecondsRemaining - COUNTDOWN_INTERVAL, 0);
     }
 
 
@@ -217,10 +222,11 @@ public class CountdownTimer  {
 
 
     private void updateCountdownNotification(){
-        if(millisecondsRemaining >= 1000) {
-            notificationHelper.updateCountdown(getStr(R.string.notification_state_counting_down), getCurrentTimeText());
+        if(millisecondsRemaining >= MILLISECONDS_PER_SECOND) {
+            notificationHelper.updateNotification(getStr(R.string.notification_state_counting_down), getCurrentTimeText());
         }
     }
+
 
 
     private String getClockStringFor(int number){
@@ -230,14 +236,14 @@ public class CountdownTimer  {
 
 
     private void handleTimesUp(){
-        if(millisecondsRemaining > 0) {
+        if(millisecondsRemaining >= COUNTDOWN_INTERVAL) {
             return;
         }
-        notifyViewOfTimesUp();
         currentState = TimerState.READY;
-        cancelCountdownTask();
-        playSoundOnTimesUp();
+        soundPlayer.playSound();
+        notifyViewOfTimesUp();
         notificationHelper.sendTimesUpNotification(timesUpMessage);
+        cancelCountdownTask();
     }
 
 
@@ -253,13 +259,5 @@ public class CountdownTimer  {
         return context.getString(id);
     }
 
-
-    private void playSoundOnTimesUp(){
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.alert1);
-        try{
-            mediaPlayer.start();
-
-        }catch(Exception e){e.printStackTrace();}
-    }
 
 }

@@ -11,8 +11,6 @@ import android.net.Uri;
 
 import androidx.core.app.NotificationCompat;
 
-import com.jcrawley.remindme.service.TimerService;
-
 
 public class NotificationHelper {
 
@@ -21,7 +19,7 @@ public class NotificationHelper {
     private PendingIntent pendingIntent;
     final static String NOTIFICATION_CHANNEL_ID = "com.jcrawley.musicplayer-notification";
     private NotificationManager notificationManager;
-   // private TimerService timerService;
+
 
     public NotificationHelper(Context context) {
         this.context = context;
@@ -82,17 +80,6 @@ public class NotificationHelper {
 
     public void updateNotification(String status, String timeStr) {
         notificationManager.notify(NOTIFICATION_ID, createNotification(status, timeStr));
-    }
-
-    private int countdownCounter;
-
-
-    public void updateCountdown(String status, String timeStr) {
-        countdownCounter++;
-        if(countdownCounter % 10 == 0){
-            notificationManager.notify(NOTIFICATION_ID, createNotification(status, timeStr));
-            countdownCounter = 0;
-        }
     }
 
 
