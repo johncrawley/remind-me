@@ -172,7 +172,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 
     private void initAnimation(){
-        displayTimesUpTextAnimation = new ScaleAnimation(1.0f,1.0f, 0.1f, 1.0f, 0.5f, 1f);
+        displayTimesUpTextAnimation = new ScaleAnimation(0.1f, 1.1f, 0.1f, 1.1f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
         displayTimesUpTextAnimation.setDuration(500);
         displayTimesUpTextAnimation.setFillAfter(true);
     }
