@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.RemindMe" parent="Theme.Material3.Dark">
         <!-- Primary brand color. -->
@@ -22,17 +22,17 @@
 
 
     <style name="customButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:textColor">@color/dark_buttonText</item>
-        <item name="android:backgroundTint">@color/dark_buttonBackgroundTint</item>
+        <item name="android:textColor">@color/dark_button_text</item>
+        <item name="android:backgroundTint">@color/dark_button_background_tint</item>
     </style>
 
 
     <style name="customMaterialOutlineButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:textColor">@color/dark_buttonText</item>
+        <item name="android:textColor">@color/dark_button_text</item>
         <item name="cornerRadius">15dp</item>
         <item name="strokeWidth">2dp</item>
-        <item name="backgroundColor">@color/dark_buttonBackgroundTint</item>
-        <item name="strokeColor">@color/dark_buttonBackgroundTint</item>
+        <item name="backgroundColor">@color/dark_button_background_tint</item>
+        <item name="strokeColor">@color/dark_button_background_tint</item>
     </style>
 
 </resources>
