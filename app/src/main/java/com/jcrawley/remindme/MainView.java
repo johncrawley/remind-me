@@ -13,4 +13,5 @@ public interface MainView {
  void updateForReadyState();
  void updateForRunningState();
  void updateForPausedState();
+ void updateForTimesUpState(String timesUpText);
 }

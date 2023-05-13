@@ -21,7 +21,7 @@ public class CountdownTimer  {
     private MainView view;
     private int timerStartingValue;
     private int millisecondsRemaining;
-    private enum TimerState {READY, RUNNING, PAUSED }
+    private enum TimerState {READY, RUNNING, PAUSED, TIMES_UP }
     private TimerState currentState = TimerState.READY;
     private Future<?> future;
     private String currentTimeText = "";
@@ -55,9 +55,10 @@ public class CountdownTimer  {
         updateCurrentTimeText();
         setCurrentCountdownValueOnMainView();
         switch (currentState){
-            case READY: view.updateForReadyState(); break;
+            case READY: view.updateForReadyState();     break;
             case RUNNING: view.updateForRunningState(); break;
-            case PAUSED: view.updateForPausedState();
+            case PAUSED: view.updateForPausedState();   break;
+            case TIMES_UP: view.updateForTimesUpState(timesUpMessage);
         }
     }
 
@@ -93,7 +94,7 @@ public class CountdownTimer  {
     private void updateCurrentTimeText(){
         int minutes = getMinutesPart();
         int seconds = getSecondsPart();
-        currentTimeText = getClockStringFor(minutes) + " : " + getClockStringFor(seconds);
+        currentTimeText = getClockStringFor(minutes) + ":" + getClockStringFor(seconds);
     }
 
 
@@ -111,21 +112,15 @@ public class CountdownTimer  {
 
 
     private void updateCurrentSecondsIfTimerIsStopped(){
-        log("Entered updateCurrentSecondsIfTimerIsStopped() timer state is: " + currentState);
         if(currentState == TimerState.READY){
             setMillisecondsRemaining();
             if(view != null) {
-                log("view is not null, setting currentTimeText: " + currentTimeText);
                 view.resetCurrentCountdownValue(getCurrentTimeText());
                 updateNotification();
             }
         }
     }
 
-
-    private void log(String msg){
-        System.out.println("^^^ CountdownTimer: " + msg);
-    }
 
     private int getMinutesPart(){
         return getAllSeconds() / SECONDS_PER_MINUTE;
@@ -239,7 +234,7 @@ public class CountdownTimer  {
         if(millisecondsRemaining >= COUNTDOWN_INTERVAL) {
             return;
         }
-        currentState = TimerState.READY;
+        currentState = TimerState.TIMES_UP;
         soundPlayer.playSound();
         notifyViewOfTimesUp();
         notificationHelper.sendTimesUpNotification(timesUpMessage);

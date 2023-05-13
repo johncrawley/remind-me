@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void notifyTimesUp(String timesUpMessage){
         showTimesUpText(timesUpMessage);
+        hideStartStopButton();
         showStartButton();
         disableStartButton();
     }
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void notifyResetWhenTimerStopped() {
+        showStartStopButton();
         this.startStopButton.setEnabled(true);
         this.startStopButton.setText(getResources().getString(R.string.button_start_label));
     }
@@ -173,16 +175,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         displayTimesUpTextAnimation = new ScaleAnimation(1.0f,1.0f, 0.1f, 1.0f, 0.5f, 1f);
         displayTimesUpTextAnimation.setDuration(500);
         displayTimesUpTextAnimation.setFillAfter(true);
-    }
-
-
-    private void showTimesUpText(String timesUpMessage){
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> {
-            timesUpMessageText.setText(timesUpMessage);
-            timesUpMessageText.setVisibility(View.VISIBLE);
-            timesUpMessageText.startAnimation(displayTimesUpTextAnimation);
-        });
     }
 
 
@@ -209,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void updateForRunningState(){
+        showStartStopButton();
         showPauseButton();
         showResetButton();
     }
@@ -216,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void updateForReadyState(){
+        showStartStopButton();
         showStartButton();
         showResetButton();
     }
@@ -223,15 +217,40 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void updateForPausedState(){
+        showStartStopButton();
         showResumeButton();
         showResetButton();
     }
+
+
+    @Override
+    public void updateForTimesUpState(String timesUpText){
+        showResetButton();
+        hideStartStopButton();
+        displayTimesUpText(timesUpText);
+    }
+
 
 
     public void assignSettings(int minutes, int seconds, String message) {
         if(timerService != null) {
             timerService.savePreferences(minutes, seconds, message);
         }
+    }
+
+
+    private void showTimesUpText(String timesUpMessage){
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
+            displayTimesUpText(timesUpMessage);
+            timesUpMessageText.startAnimation(displayTimesUpTextAnimation);
+        });
+    }
+
+
+    private void displayTimesUpText(String timesUpMessage){
+        timesUpMessageText.setText(timesUpMessage);
+        timesUpMessageText.setVisibility(View.VISIBLE);
     }
 
 
@@ -258,6 +277,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private void showResetButton(){
         resetButton.setText(getString(R.string.button_reset_label));
+    }
+
+
+    private void showStartStopButton(){
+        startStopButton.setVisibility(View.VISIBLE);
+    }
+
+
+    private void hideStartStopButton(){
+        startStopButton.setVisibility(View.INVISIBLE);
     }
 
 
