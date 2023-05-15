@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="?attr/dialog_window_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/largeMinuteDigitIncreaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_config_large_minute_increase_button"
+                android:src="@android:drawable/arrow_up_float" />
+
+            <TextView
+                android:id="@+id/largeMinuteDigit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="@dimen/config_clock_digit_size" />
+
+            <ImageButton
+                android:id="@+id/largeMinuteDigitDecreaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_config_large_minute_decrease_button"
+                android:src="@android:drawable/arrow_down_float" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/smallMinuteDigitIncreaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_config_small_minute_increase_button"
+                android:src="@android:drawable/arrow_up_float" />
+
+            <TextView
+                android:id="@+id/smallMinuteDigit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="@dimen/config_clock_digit_size" />
+
+            <ImageButton
+                android:id="@+id/smallMinuteDigitDecreaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_config_small_minute_decrease_button"
+                android:src="@android:drawable/arrow_down_float" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/delimiter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=":"
+                android:textSize="@dimen/config_clock_digit_size" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/largeSecondDigitIncreaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_config_large_second_increase_button"
+                android:src="@android:drawable/arrow_up_float" />
+
+            <TextView
+                android:id="@+id/largeSecondDigit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="@dimen/config_clock_digit_size" />
+
+            <ImageButton
+                android:id="@+id/largeSecondDigitDecreaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_config_large_second_decrease_button"
+                android:src="@android:drawable/arrow_down_float" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/smallSecondDigitIncreaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_config_small_second_increase_button"
+                android:src="@android:drawable/arrow_up_float" />
+
+            <TextView
+                android:id="@+id/smallSecondDigit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="@dimen/config_clock_digit_size" />
+
+            <ImageButton
+                android:id="@+id/smallSecondDigitDecreaseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_config_small_second_decrease_button"
+                android:src="@android:drawable/arrow_down_float" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/message_input_layout"
+        android:layout_width="@dimen/configure_dialog_input_text_width"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/configure_dialog_input_text_margin_horizontal"
+        android:layout_marginVertical="@dimen/configure_dialog_input_text_margin_vertical"
+        android:hint="@string/enter_message_hint">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:id="@+id/messageInputEditText"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/configOkButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/configure_dialog_ok_button_margin_vertical"
+        android:layout_marginHorizontal="@dimen/configure_dialog_ok_button_margin_horizontal"
+        android:text="@string/config_ok_button" />
+
+</LinearLayout>

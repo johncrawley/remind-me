@@ -108,6 +108,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
         viewModel.hasBeenInitialized = true;
         TimerPreferences timerPreferences = new TimerPreferences(MainActivity.this);
         Settings settings = timerPreferences.getSettings();
+        viewModel.initialMinutesLargeDigit = String.valueOf(settings.minutesLargeDigit);
+        viewModel.initialMinutesSmallDigit = String.valueOf(settings.minutesSmallDigit);
+        viewModel.initialSecondsLargeDigit = String.valueOf(settings.secondsLargeDigit);
+        viewModel.initialSecondsSmallDigit = String.valueOf(settings.secondsSmallDigit);
+
         viewModel.initialSeconds = String.valueOf(settings.getSeconds());
         viewModel.initialMinutes = String.valueOf(settings.getMinutes());
         viewModel.reminderMessage = settings.getTimesUpMessage();
@@ -236,6 +241,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void assignSettings(int minutes, int seconds, String message) {
         if(timerService != null) {
             timerService.savePreferences(minutes, seconds, message);
+        }
+    }
+
+    public void assignSettings(Settings settings) {
+        if(timerService != null) {
+            timerService.savePreferences(settings);
         }
     }
 

@@ -5,6 +5,8 @@ public class Settings {
     private final int minutes;
     private final String timesUpMessage;
 
+    public int minutesLargeDigit, minutesSmallDigit, secondsLargeDigit, secondsSmallDigit;
+
     public Settings(int seconds, int minutes, String timesUpMessage){
         this.seconds = seconds;
         this.minutes = minutes;

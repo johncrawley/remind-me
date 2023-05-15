@@ -38,6 +38,11 @@ public class TimerService extends Service {
         countdownTimer.setTime(minutes, seconds, message);
     }
 
+    public void savePreferences(Settings settings){
+        timerPreferences.saveSettings(settings);
+        countdownTimer.setTime(settings.getMinutes(), settings.getSeconds(), settings.getTimesUpMessage());
+    }
+
 
     public void setView(MainView view){
         countdownTimer.setAndUpdateView(view);

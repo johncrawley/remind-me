@@ -23,4 +23,18 @@
     <string name="notification_state_counting_down">Counting Down</string>
     <string name="notification_state_ready">Ready</string>
     <string name="notification_state_paused">Paused</string>
+
+    <string name="description_config_large_minute_increase_button">increase large minute digit</string>
+    <string name="description_config_large_minute_decrease_button">decrease large minute digit</string>
+
+    <string name="description_config_small_minute_increase_button">increase small minute digit</string>
+    <string name="description_config_small_minute_decrease_button">decrease small minute digit</string>
+
+    <string name="description_config_large_second_increase_button">increase large second digit</string>
+    <string name="description_config_large_second_decrease_button">decrease large second digit</string>
+
+    <string name="description_config_small_second_increase_button">increase small second digit</string>
+    <string name="description_config_small_second_decrease_button">decrease small second digit</string>
+
+
 </resources>
