@@ -4,12 +4,12 @@ package com.jcrawley.remindme;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +21,6 @@ import androidx.lifecycle.ViewModelProvider;
 public class ConfigDialogFragment extends DialogFragment {
 
 
-    private String minutesStr = "";
-    private String secondsStr = "";
     private MainViewModel viewModel;
     private EditText messageEditText;
 
@@ -35,7 +33,7 @@ public class ConfigDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.configure_dialog, container, false);
+        View rootView = inflater.inflate(R.layout.config_dialog, container, false);
         Dialog dialog =  getDialog();
         if(getActivity() == null){
             return rootView;
@@ -51,7 +49,6 @@ public class ConfigDialogFragment extends DialogFragment {
 
 
     private void setupViews(View parentView){
-
         minutesLargeDigit = parentView.findViewById(R.id.largeMinuteDigit);
         minutesSmallDigit = parentView.findViewById(R.id.smallMinuteDigit);
         secondsLargeDigit = parentView.findViewById(R.id.largeSecondDigit);
@@ -69,14 +66,14 @@ public class ConfigDialogFragment extends DialogFragment {
 
         setupButton(parentView, R.id.smallSecondDigitIncreaseButton, ()-> increaseDigitFor(secondsSmallDigit, 9));
         setupButton(parentView, R.id.smallSecondDigitDecreaseButton, ()-> decreaseDigitFor(secondsSmallDigit, 9));
-
     }
 
 
     private void setupButton(View parentView, int buttonId, Runnable runnable){
-        Button button = parentView.findViewById(buttonId);
+        ImageButton button = parentView.findViewById(buttonId);
         button.setOnClickListener(v -> runnable.run());
     }
+
 
     private void increaseDigitFor(TextView textView, int limit){
         int digit = Integer.parseInt(textView.getText().toString());
@@ -112,7 +109,6 @@ public class ConfigDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        minutesStr = "";
         messageEditText = getEditTextAndAssignString(view, R.id.messageInputEditText, viewModel.reminderMessage);
 
         setupOkButton(view);
@@ -139,33 +135,6 @@ public class ConfigDialogFragment extends DialogFragment {
             editText.setText(str);
         }
         return editText;
-    }
-
-
-    private EditText getEditTextForNumberAndAssignString(View parentView, int id, String str){
-        EditText editText = parentView.findViewById(id);
-        if(str != null) {
-            editText.setText(str.trim().isEmpty() ? "0" : str);
-        }
-        editText.setOnFocusChangeListener((view, b) -> setContentsToZeroIfBlank(view));
-        return editText;
-    }
-
-
-    private void setContentsToZeroIfBlank(View view){
-        EditText editText = (EditText) view;
-        if(editText.getText().toString().isEmpty()){
-            editText.setText("0");
-        }
-    }
-
-
-
-    private String validate(String str){
-        if(str.isEmpty()){
-            return "0";
-        }
-        return str;
     }
 
 
@@ -213,24 +182,5 @@ public class ConfigDialogFragment extends DialogFragment {
         return textView.getText().toString();
     }
 
-
-    private int parse(String str){
-        if(null == str || str.isEmpty()){
-            return 0;
-        }
-        return Integer.parseInt(str);
-    }
-
-
-    private void removeNewValueIfOutsideAcceptableRange(Editable editable, int limit, String previousValue){
-        String str = editable.toString();
-        if(str.isEmpty()){
-            return;
-        }
-        if(Integer.parseInt(str) > limit){
-            editable.clear();
-            editable.append(previousValue);
-        }
-    }
 
 }

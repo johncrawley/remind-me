@@ -10,6 +10,7 @@
     <dimen name="configure_dialog_input_text_margin_vertical">6dp</dimen>
     <dimen name="configure_dialog_input_text_margin_horizontal">24dp</dimen>
     <dimen name="configure_dialog_input_text_width">300dp</dimen>
+    <dimen name="configure_dialog_digits_layout_margin">12dp</dimen>
 
     <dimen name="config_clock_digit_size">24sp</dimen>
 

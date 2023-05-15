@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="@dimen/configure_dialog_digits_layout_margin"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -31,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="0"
+                android:text="@string/config_dialog_default_digit"
                 android:textSize="@dimen/config_clock_digit_size" />
 
             <ImageButton
@@ -59,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="0"
+                android:text="@string/config_dialog_default_digit"
                 android:textSize="@dimen/config_clock_digit_size" />
 
             <ImageButton
@@ -80,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text=":"
+                android:text="@string/time_delimiter"
                 android:textSize="@dimen/config_clock_digit_size" />
 
         </LinearLayout>
@@ -103,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="0"
+                android:text="@string/config_dialog_default_digit"
                 android:textSize="@dimen/config_clock_digit_size" />
 
             <ImageButton
@@ -132,7 +133,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="0"
+                android:text="@string/config_dialog_default_digit"
                 android:textSize="@dimen/config_clock_digit_size" />
 
             <ImageButton

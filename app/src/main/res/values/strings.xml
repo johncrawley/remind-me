@@ -24,6 +24,9 @@
     <string name="notification_state_ready">Ready</string>
     <string name="notification_state_paused">Paused</string>
 
+
+    <string name="config_dialog_default_digit">0</string>
+    <string name="time_delimiter">:</string>
     <string name="description_config_large_minute_increase_button">increase large minute digit</string>
     <string name="description_config_large_minute_decrease_button">decrease large minute digit</string>
 

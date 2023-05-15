@@ -140,8 +140,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        SettingsDialogFragment settingsDialogFragment = SettingsDialogFragment.newInstance();
-        settingsDialogFragment.show(ft, tagName);
+        ConfigDialogFragment.newInstance().show(ft, tagName);
     }
 
 
