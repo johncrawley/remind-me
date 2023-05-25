@@ -1,4 +1,4 @@
-package com.jcrawley.remindme;
+package com.jcrawley.remindme.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

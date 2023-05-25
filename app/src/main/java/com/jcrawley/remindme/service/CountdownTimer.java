@@ -1,8 +1,11 @@
-package com.jcrawley.remindme;
+package com.jcrawley.remindme.service;
 
 import android.app.Notification;
 import android.content.Context;
-import com.jcrawley.remindme.service.SoundPlayer;
+
+import com.jcrawley.remindme.view.MainView;
+import com.jcrawley.remindme.view.NotificationHelper;
+import com.jcrawley.remindme.R;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -27,10 +30,12 @@ public class CountdownTimer  {
     private String currentTimeText = "";
     private String timesUpMessage = "";
     private int countdownCounter;
+    private final WakeLockHelper wakeLockHelper;
 
 
-    public CountdownTimer(Context context){
+    public CountdownTimer(Context context, WakeLockHelper wakeLockHelper){
         this.context = context;
+        this.wakeLockHelper = wakeLockHelper;
         soundPlayer = new SoundPlayer(context);
         notificationHelper = new NotificationHelper(context);
     }
@@ -144,6 +149,7 @@ public class CountdownTimer  {
             return;
         }
         view.notifyTimerStarted();
+        wakeLockHelper.acquireCpuWakeLock();
     }
 
 
@@ -160,6 +166,7 @@ public class CountdownTimer  {
         }
         view.notifyPaused();
         updateNotification();
+        wakeLockHelper.releaseCpuWakeLock();
     }
 
 
@@ -239,6 +246,7 @@ public class CountdownTimer  {
         notifyViewOfTimesUp();
         notificationHelper.sendTimesUpNotification(timesUpMessage);
         cancelCountdownTask();
+        wakeLockHelper.releaseCpuWakeLock();
     }
 
 

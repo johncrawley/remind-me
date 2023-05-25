@@ -1,4 +1,4 @@
-package com.jcrawley.remindme;
+package com.jcrawley.remindme.view;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,6 +10,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 
 import androidx.core.app.NotificationCompat;
+
+import com.jcrawley.remindme.MainActivity;
+import com.jcrawley.remindme.R;
 
 
 public class NotificationHelper {

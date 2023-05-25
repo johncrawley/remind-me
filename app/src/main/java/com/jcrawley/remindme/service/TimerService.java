@@ -1,23 +1,24 @@
 package com.jcrawley.remindme.service;
 
-import static com.jcrawley.remindme.NotificationHelper.NOTIFICATION_ID;
+import static com.jcrawley.remindme.view.NotificationHelper.NOTIFICATION_ID;
 
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
 
-import com.jcrawley.remindme.CountdownTimer;
-import com.jcrawley.remindme.MainView;
-import com.jcrawley.remindme.Settings;
-import com.jcrawley.remindme.TimerPreferences;
+import com.jcrawley.remindme.view.MainView;
+import com.jcrawley.remindme.preferences.Settings;
+import com.jcrawley.remindme.preferences.TimerPreferences;
 
 public class TimerService extends Service {
 
     private final IBinder binder = new LocalBinder();
     private CountdownTimer countdownTimer;
     private TimerPreferences timerPreferences;
+    private WakeLockHelper wakeLockHelper;
 
 
     public TimerService() {
@@ -27,10 +28,12 @@ public class TimerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        countdownTimer = new CountdownTimer(getApplicationContext());
+        wakeLockHelper = new WakeLockHelper(this);
+        countdownTimer = new CountdownTimer(getApplicationContext(), wakeLockHelper);
         setupPreferences();
         startForeground(NOTIFICATION_ID, countdownTimer.getInitialNotification());
     }
+
 
 
     public void savePreferences(int minutes, int seconds, String message){
@@ -87,6 +90,7 @@ public class TimerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        wakeLockHelper.destroy();
     }
 
 
@@ -95,6 +99,8 @@ public class TimerService extends Service {
         Settings settings = timerPreferences.getSettings();
         countdownTimer.setTime(settings.getMinutes(), settings.getSeconds(), settings.getTimesUpMessage());
     }
+
+
 
 }
 

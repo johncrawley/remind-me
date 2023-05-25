@@ -1,4 +1,4 @@
-package com.jcrawley.remindme;
+package com.jcrawley.remindme.preferences;
 
 public class Settings {
     private final int seconds;

@@ -21,7 +21,13 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.jcrawley.remindme.preferences.Settings;
+import com.jcrawley.remindme.preferences.TimerPreferences;
 import com.jcrawley.remindme.service.TimerService;
+import com.jcrawley.remindme.view.ConfigDialogFragment;
+import com.jcrawley.remindme.view.MainView;
+import com.jcrawley.remindme.view.MainViewModel;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 

@@ -1,4 +1,4 @@
-package com.jcrawley.remindme;
+package com.jcrawley.remindme.view;
 
 
 import android.app.Dialog;
@@ -17,6 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.jcrawley.remindme.MainActivity;
+import com.jcrawley.remindme.R;
+import com.jcrawley.remindme.preferences.Settings;
+
 
 public class ConfigDialogFragment extends DialogFragment {
 
@@ -27,7 +31,7 @@ public class ConfigDialogFragment extends DialogFragment {
     private TextView minutesLargeDigit, minutesSmallDigit, secondsLargeDigit, secondsSmallDigit;
 
 
-    static ConfigDialogFragment newInstance() {
+    public static ConfigDialogFragment newInstance() {
         return new ConfigDialogFragment();
     }
 

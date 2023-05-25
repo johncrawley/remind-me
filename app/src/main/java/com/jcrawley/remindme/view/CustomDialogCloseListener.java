@@ -1,4 +1,4 @@
-package com.jcrawley.remindme;
+package com.jcrawley.remindme.view;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
