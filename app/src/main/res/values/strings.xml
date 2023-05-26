@@ -7,6 +7,8 @@
     <string name="button_pause_label">Pause</string>
     <string name="button_resume_label">Resume</string>
     <string name="default_countdown_time">0:00</string>
+    <string name="default_countdown_minutes">00</string>
+    <string name="default_countdown_seconds">00</string>
     <string name="time_input_label">Time</string>
     <string name="message_input_label">Message</string>
     <string name="enter_message_hint">Notification Message</string>

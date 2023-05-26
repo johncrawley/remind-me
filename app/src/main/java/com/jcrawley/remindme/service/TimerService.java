@@ -7,7 +7,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.PowerManager;
 
 import com.jcrawley.remindme.view.MainView;
 import com.jcrawley.remindme.preferences.Settings;

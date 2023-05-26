@@ -31,8 +31,7 @@ import com.jcrawley.remindme.view.MainViewModel;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
-
-    private TextView currentCountdownText;
+    private TextView currentCountdownMinutesText, currentCountdownSecondsText, currentCountdownDelimiterText;
     private TextView timesUpMessageText;
     private Button resetButton, startStopButton;
     private MainViewModel viewModel;
@@ -126,7 +125,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 
     private void setupViews(){
-        currentCountdownText = findViewById(R.id.currentCountdownText);
+        currentCountdownMinutesText = findViewById(R.id.currentCountdownMinutes);
+        currentCountdownSecondsText = findViewById(R.id.currentCountdownSeconds);
+        currentCountdownDelimiterText = findViewById(R.id.currentCountdownDelimiter);
         timesUpMessageText = findViewById(R.id.timesUpMessageText);
         startStopButton = findViewById(R.id.startStopButton);
         startStopButton.setOnClickListener((View v) -> timerService.startStop());
@@ -195,15 +196,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
-    public void resetCurrentCountdownValue(String timeStr) {
-        setCurrentCountdownValue(timeStr, false);
-    }
-
-
     @Override
-    public void setCurrentCountdownValue(String currentTimeText, boolean isCritical) {
+    public void setCurrentCountdownValue(String currentMinutes, String currentSeconds, boolean isCritical){
         runOnUiThread(() -> {
-            currentCountdownText.setText(currentTimeText);
+            currentCountdownMinutesText.setText(currentMinutes);
+            currentCountdownSecondsText.setText(currentSeconds);
             viewModel.isTimeLeftCritical = isCritical;
             updateTimerTextColor();
         });
@@ -273,12 +270,24 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private void updateTimerTextColor(){
         int colorId = viewModel.isTimeLeftCritical ? R.color.dark_timer_text_critical : R.color.dark_timer_text_normal;
-        currentCountdownText.setTextColor(getResources().getColor(colorId, null));
+        setColorOnCountdownText(colorId);
+    }
+
+
+    private void setColorOnCountdownText(int colorId){
+        setColorOn(currentCountdownMinutesText, colorId);
+        setColorOn(currentCountdownSecondsText, colorId);
+        setColorOn(currentCountdownDelimiterText, colorId);
+    }
+
+
+    private void setColorOn(TextView textView, int colorId){
+        textView.setTextColor(getResources().getColor(colorId, null));
     }
 
 
     private void changeCountdownColorOff() {
-        setCountdownTextColor(R.color.colorTimerTextOff);
+        setColorOnCountdownText(R.color.colorTimerTextOff);
     }
 
 
@@ -314,11 +323,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private void showResumeButton(){
         startStopButton.setText(getString(R.string.button_resume_label));
-    }
-
-
-    private void setCountdownTextColor(int colorId){
-        currentCountdownText.setTextColor(getResources().getColor(colorId, null));
     }
 
 }

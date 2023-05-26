@@ -71,7 +71,7 @@ public class CountdownTimer  {
     public void resetTime(){
         setMillisecondsRemaining();
         if(view != null) {
-            view.setCurrentCountdownValue(getCurrentTimeText(), false);
+            view.setCurrentCountdownValue(getMinutesStr(), getSecondsStr(), false);
             resetStartButton();
         }
         if(currentState == TimerState.RUNNING){
@@ -99,7 +99,19 @@ public class CountdownTimer  {
     private void updateCurrentTimeText(){
         int minutes = getMinutesPart();
         int seconds = getSecondsPart();
-        currentTimeText = getClockStringFor(minutes) + ":" + getClockStringFor(seconds);
+        currentTimeText = getClockStringFor(minutes)
+                + context.getString(R.string.time_delimiter)
+                + getClockStringFor(seconds);
+    }
+
+
+    private String getMinutesStr(){
+        return getClockStringFor(getMinutesPart());
+    }
+
+
+    private String getSecondsStr(){
+        return getClockStringFor(getSecondsPart());
     }
 
 
@@ -117,12 +129,13 @@ public class CountdownTimer  {
 
 
     private void updateCurrentSecondsIfTimerIsStopped(){
-        if(currentState == TimerState.READY){
-            setMillisecondsRemaining();
-            if(view != null) {
-                view.resetCurrentCountdownValue(getCurrentTimeText());
-                updateNotification();
-            }
+        if(currentState != TimerState.READY){
+            return;
+        }
+        setMillisecondsRemaining();
+        if(view != null) {
+            view.setCurrentCountdownValue(getMinutesStr(), getSecondsStr(), false);
+            updateNotification();
         }
     }
 
@@ -219,7 +232,7 @@ public class CountdownTimer  {
         if(view == null){
             return;
         }
-        view.setCurrentCountdownValue(getCurrentTimeText(), isCritical(getAllSeconds()));
+        view.setCurrentCountdownValue(getMinutesStr(), getSecondsStr(),  isCritical(getAllSeconds()));
     }
 
 
@@ -228,7 +241,6 @@ public class CountdownTimer  {
             notificationHelper.updateNotification(getStr(R.string.notification_state_counting_down), getCurrentTimeText());
         }
     }
-
 
 
     private String getClockStringFor(int number){

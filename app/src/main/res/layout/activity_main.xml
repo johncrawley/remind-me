@@ -7,19 +7,65 @@
     android:layout_gravity="center"
     tools:context="com.jcrawley.remindme.MainActivity">
 
-    <TextView
-        android:id="@+id/currentCountdownText"
+
+    <LinearLayout
+        android:id="@+id/countdownTextLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/default_countdown_time"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="@color/colorTimerTextOff"
-        android:textSize="@dimen/timer_text_size"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@id/resetButton"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/currentCountdownMinutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_countdown_minutes"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:fontFamily="@font/chivo_mono_variable_wght"
+            android:textColor="@color/colorTimerTextOff"
+            android:textSize="@dimen/timer_text_size"
+            app:layout_constraintBottom_toTopOf="@id/resetButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/currentCountdownDelimiter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="11dp"
+            android:text="@string/time_delimiter"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:fontFamily="@font/chivo_mono_variable_wght"
+            android:textColor="@color/colorTimerTextOff"
+            android:textSize="@dimen/timer_text_size"
+            app:layout_constraintBottom_toTopOf="@id/resetButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/currentCountdownSeconds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_countdown_seconds"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:fontFamily="@font/chivo_mono_variable_wght"
+            android:textColor="@color/colorTimerTextOff"
+            android:textSize="@dimen/timer_text_size"
+            app:layout_constraintBottom_toTopOf="@id/resetButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/timesUpMessageText"
@@ -34,7 +80,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/colorTimerTextOff"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentCountdownText"
+        app:layout_constraintTop_toBottomOf="@+id/countdownTextLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
