@@ -22,9 +22,10 @@
 
             <ImageButton
                 android:id="@+id/largeMinuteDigitIncreaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/configure_dialog_digit_button_width"
+                android:layout_height="@dimen/configure_dialog_digit_button_height"
                 android:contentDescription="@string/description_config_large_minute_increase_button"
+                android:backgroundTint="@color/dark_config_dialog_button_tint"
                 android:src="@android:drawable/arrow_up_float" />
 
             <TextView
@@ -37,9 +38,10 @@
 
             <ImageButton
                 android:id="@+id/largeMinuteDigitDecreaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/configure_dialog_digit_button_width"
+                android:layout_height="@dimen/configure_dialog_digit_button_height"
                 android:contentDescription="@string/description_config_large_minute_decrease_button"
+                android:backgroundTint="@color/dark_config_dialog_button_tint"
                 android:src="@android:drawable/arrow_down_float" />
         </LinearLayout>
 
@@ -50,9 +52,10 @@
 
             <ImageButton
                 android:id="@+id/smallMinuteDigitIncreaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/configure_dialog_digit_button_width"
+                android:layout_height="@dimen/configure_dialog_digit_button_height"
                 android:contentDescription="@string/description_config_small_minute_increase_button"
+                android:backgroundTint="@color/dark_config_dialog_button_tint"
                 android:src="@android:drawable/arrow_up_float" />
 
             <TextView
@@ -65,9 +68,10 @@
 
             <ImageButton
                 android:id="@+id/smallMinuteDigitDecreaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/configure_dialog_digit_button_width"
+                android:layout_height="@dimen/configure_dialog_digit_button_height"
                 android:contentDescription="@string/description_config_small_minute_decrease_button"
+                android:backgroundTint="@color/dark_config_dialog_button_tint"
                 android:src="@android:drawable/arrow_down_float" />
         </LinearLayout>
 
@@ -94,9 +98,10 @@
 
             <ImageButton
                 android:id="@+id/largeSecondDigitIncreaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/configure_dialog_digit_button_width"
+                android:layout_height="@dimen/configure_dialog_digit_button_height"
                 android:contentDescription="@string/description_config_large_second_increase_button"
+                android:backgroundTint="@color/dark_config_dialog_button_tint"
                 android:src="@android:drawable/arrow_up_float" />
 
             <TextView
@@ -109,9 +114,10 @@
 
             <ImageButton
                 android:id="@+id/largeSecondDigitDecreaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/configure_dialog_digit_button_width"
+                android:layout_height="@dimen/configure_dialog_digit_button_height"
                 android:contentDescription="@string/description_config_large_second_decrease_button"
+                android:backgroundTint="@color/dark_config_dialog_button_tint"
                 android:src="@android:drawable/arrow_down_float" />
 
         </LinearLayout>
@@ -123,9 +129,10 @@
 
             <ImageButton
                 android:id="@+id/smallSecondDigitIncreaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/configure_dialog_digit_button_width"
+                android:layout_height="@dimen/configure_dialog_digit_button_height"
                 android:contentDescription="@string/description_config_small_second_increase_button"
+                android:backgroundTint="@color/dark_config_dialog_button_tint"
                 android:src="@android:drawable/arrow_up_float" />
 
             <TextView
@@ -138,9 +145,10 @@
 
             <ImageButton
                 android:id="@+id/smallSecondDigitDecreaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/configure_dialog_digit_button_width"
+                android:layout_height="@dimen/configure_dialog_digit_button_height"
                 android:contentDescription="@string/description_config_small_second_decrease_button"
+                android:backgroundTint="@color/dark_config_dialog_button_tint"
                 android:src="@android:drawable/arrow_down_float" />
         </LinearLayout>
 
@@ -154,20 +162,23 @@
         android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/configure_dialog_input_text_margin_horizontal"
-        android:layout_marginVertical="@dimen/configure_dialog_input_text_margin_vertical"
+        android:layout_marginTop="@dimen/configure_dialog_input_text_margin_top"
+        android:layout_marginBottom="@dimen/configure_dialog_input_text_margin_bottom"
         android:hint="@string/enter_message_hint">
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:id="@+id/messageInputEditText"
             android:singleLine="true"
+            android:maxLength="28"
             android:imeOptions="actionDone"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/configOkButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginVertical="@dimen/configure_dialog_ok_button_margin_vertical"
         android:layout_marginHorizontal="@dimen/configure_dialog_ok_button_margin_horizontal"
         android:text="@string/config_ok_button" />

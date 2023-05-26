@@ -15,6 +15,7 @@
     <color name="dark_button_text">#BDBBC1</color>
     <color name="dark_button_background_tint">#6E27B4</color>
     <color name="dark_dialog_window_background">#222222</color>
+    <color name="dark_config_dialog_button_tint">#222222</color>
     <color name="dark_primary_color">#7F15CC</color>
     <color name="dark_text">#7237F4</color>
     <color name="dark_window_background">#151515</color>
