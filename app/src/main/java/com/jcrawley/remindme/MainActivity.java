@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.jcrawley.remindme.preferences.Settings;
 import com.jcrawley.remindme.preferences.TimerPreferences;
 import com.jcrawley.remindme.service.TimerService;
+import com.jcrawley.remindme.view.AnimationHelper;
 import com.jcrawley.remindme.view.ConfigDialogFragment;
 import com.jcrawley.remindme.view.MainView;
 import com.jcrawley.remindme.view.MainViewModel;
@@ -32,6 +33,7 @@ import com.jcrawley.remindme.view.MainViewModel;
 public class MainActivity extends AppCompatActivity implements MainView {
 
     private TextView currentCountdownMinutesText, currentCountdownSecondsText, currentCountdownDelimiterText;
+    private View countdownTextLayout;
     private TextView timesUpMessageText;
     private Button resetButton, startStopButton;
     private MainViewModel viewModel;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setContentView(R.layout.activity_main);
         setupViews();
         setupViewModel();
-        initAnimation();
+        initScaleAnimationForTimesUpText();
         startForegroundService();
         updateTimerTextColor();
     }
@@ -128,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         currentCountdownMinutesText = findViewById(R.id.currentCountdownMinutes);
         currentCountdownSecondsText = findViewById(R.id.currentCountdownSeconds);
         currentCountdownDelimiterText = findViewById(R.id.currentCountdownDelimiter);
+        countdownTextLayout = findViewById(R.id.countdownTextLayout);
         timesUpMessageText = findViewById(R.id.timesUpMessageText);
         startStopButton = findViewById(R.id.startStopButton);
         startStopButton.setOnClickListener((View v) -> timerService.startStop());
@@ -176,13 +179,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void notifyResetWhenTimerStopped() {
-        showStartStopButton();
+        fadeInStartButton();
         this.startStopButton.setEnabled(true);
         this.startStopButton.setText(getResources().getString(R.string.button_start_label));
     }
 
 
-    private void initAnimation(){
+    private void initScaleAnimationForTimesUpText(){
         displayTimesUpTextAnimation = new ScaleAnimation(0.1f, 1.1f, 0.1f, 1.1f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
                 ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
         displayTimesUpTextAnimation.setDuration(500);
@@ -191,19 +194,32 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 
     private void hideTimesUpText(){
-        timesUpMessageText.clearAnimation();
-        timesUpMessageText.setVisibility(View.INVISIBLE);
+        AnimationHelper.fadeOut(timesUpMessageText);
+    }
+
+
+    private void fadeInStartButton(){
+        AnimationHelper.fadeIn(startStopButton);
     }
 
 
     @Override
     public void setCurrentCountdownValue(String currentMinutes, String currentSeconds, boolean isCritical){
-        runOnUiThread(() -> {
-            currentCountdownMinutesText.setText(currentMinutes);
-            currentCountdownSecondsText.setText(currentSeconds);
-            viewModel.isTimeLeftCritical = isCritical;
-            updateTimerTextColor();
-        });
+        runOnUiThread(() -> updateCountdownViews(currentMinutes, currentSeconds, isCritical));
+    }
+
+
+    @Override
+    public void resetCountdownValue(String currentMinutes, String currentSeconds, boolean isCritical){
+        runOnUiThread(() -> AnimationHelper.fadeOutAndIn(countdownTextLayout, () -> updateCountdownViews(currentMinutes, currentSeconds, isCritical)));
+    }
+
+
+    private void updateCountdownViews(String currentMinutes, String currentSeconds, boolean isCritical){
+        currentCountdownMinutesText.setText(currentMinutes);
+        currentCountdownSecondsText.setText(currentSeconds);
+        viewModel.isTimeLeftCritical = isCritical;
+        updateTimerTextColor();
     }
 
 
@@ -217,7 +233,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void updateForReadyState(){
-        showStartStopButton();
+       // showStartStopButton();
+        fadeInStartButton();
         showStartButton();
         showResetButton();
     }

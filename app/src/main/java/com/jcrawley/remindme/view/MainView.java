@@ -3,6 +3,7 @@ package com.jcrawley.remindme.view;
 public interface MainView {
 
  void setCurrentCountdownValue(String currentMinutes, String currentSeconds, boolean isCritical);
+ void resetCountdownValue(String currentMinutes, String currentSeconds, boolean isCritical);
 
  void notifyTimerStarted();
  void notifyPaused();

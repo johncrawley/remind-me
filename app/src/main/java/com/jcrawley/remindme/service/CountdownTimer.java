@@ -71,16 +71,26 @@ public class CountdownTimer  {
     public void resetTime(){
         setMillisecondsRemaining();
         if(view != null) {
-            view.setCurrentCountdownValue(getMinutesStr(), getSecondsStr(), false);
+            resetCountdownOnView();
             resetStartButton();
         }
         if(currentState == TimerState.RUNNING){
             cancelCountdownTask();
+            setMillisecondsRemaining();
             startTimer();
             return;
         }
         currentState = TimerState.READY;
         updateNotification();
+    }
+
+
+    private void resetCountdownOnView(){
+        if(currentState == TimerState.TIMES_UP){
+            view.resetCountdownValue(getMinutesStr(), getSecondsStr(), false);
+            return;
+        }
+        view.setCurrentCountdownValue(getMinutesStr(), getSecondsStr(), false);
     }
 
 
