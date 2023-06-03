@@ -67,19 +67,21 @@
 
     </LinearLayout>
 
+
     <TextView
         android:id="@+id/timesUpMessageText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:visibility="gone"
+        android:layout_marginHorizontal="@dimen/times_up_text_margin_horizontal"
+        android:layout_marginVertical="@dimen/times_up_text_margin_vertical"
+        android:visibility="invisible"
         android:textAlignment="center"
         android:gravity="center"
         android:text="@string/notification_default_message"
         android:textSize="@dimen/times_up_text_size"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/colorTimerTextOff"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/resetButton"
         app:layout_constraintTop_toBottomOf="@+id/countdownTextLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
