@@ -13,11 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/resetButton"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/timesUpMessageText"
         >
 
         <TextView
@@ -28,7 +28,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:fontFamily="@font/chivo_mono_variable_wght"
             android:textColor="@color/colorTimerTextOff"
-            android:textSize="@dimen/timer_text_size"
+            android:textSize="@dimen/timer_text_size_landscape"
             app:layout_constraintBottom_toTopOf="@id/resetButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:fontFamily="@font/chivo_mono_variable_wght"
             android:textColor="@color/colorTimerTextOff"
-            android:textSize="@dimen/timer_text_size"
+            android:textSize="@dimen/timer_text_size_landscape"
             app:layout_constraintBottom_toTopOf="@id/resetButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:fontFamily="@font/chivo_mono_variable_wght"
             android:textColor="@color/colorTimerTextOff"
-            android:textSize="@dimen/timer_text_size"
+            android:textSize="@dimen/timer_text_size_landscape"
             app:layout_constraintBottom_toTopOf="@id/resetButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:text="@string/notification_default_message"
-        android:textSize="@dimen/times_up_text_size"
+        android:textSize="@dimen/times_up_text_size_landscape"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/colorTimerTextOff"
         app:layout_constraintBottom_toTopOf="@+id/resetButton"
@@ -89,8 +89,8 @@
 
     <Button
         android:id="@+id/resetButton"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/button_height"
+        android:layout_width="@dimen/button_width_landscape"
+        android:layout_height="@dimen/button_height_landscape"
         android:text="@string/button_reset_label"
         android:layout_margin="@dimen/button_margin"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -101,8 +101,8 @@
 
     <Button
         android:id="@+id/startStopButton"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/button_height"
+        android:layout_width="@dimen/button_width_landscape"
+        android:layout_height="@dimen/button_height_landscape"
         android:layout_margin="@dimen/button_margin"
         android:text="@string/button_start_label"
         app:layout_constraintBottom_toBottomOf="@+id/resetButton"
