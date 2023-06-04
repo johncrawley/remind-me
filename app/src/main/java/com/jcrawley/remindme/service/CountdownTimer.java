@@ -213,13 +213,6 @@ public class CountdownTimer  {
     }
 
 
-    private boolean isCritical(int currentTimeLeft){
-        return currentTimeLeft <= 5
-                || (timerStartingValue >= 60 && currentTimeLeft <= 15)
-                || (timerStartingValue >= 600 && currentTimeLeft <= 30);
-    }
-
-
     private void countdown(){
         decrementMillisecondsRemaining();
         countdownCounter++;
@@ -243,6 +236,13 @@ public class CountdownTimer  {
             return;
         }
         view.setCurrentCountdownValue(getMinutesStr(), getSecondsStr(),  isCritical(getAllSeconds()));
+    }
+
+
+    private boolean isCritical(int currentTimeLeft){
+        return currentState != TimerState.READY && (currentTimeLeft <= 5
+                || (timerStartingValue >= 60 && currentTimeLeft <= 15)
+                || (timerStartingValue >= 600 && currentTimeLeft <= 30));
     }
 
 
